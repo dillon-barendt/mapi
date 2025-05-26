@@ -17,6 +17,7 @@ class SliceInfoReq(BaseModel):
     :ivar code: Represents a code related to the slice information request.
     :type code: RowCode
     """
+
     code: RowCode
 
     model_config = {"title": "SliceInfoRequest", "strict": True, "extra": "forbid"}
@@ -41,6 +42,7 @@ class SliceOut(BaseModel):
     :ivar end: The ending position of the segment in the text.
     :type end: PositiveInt
     """
+
     kind: SegmentKind
     text: StrictStr
     start: PositiveInt

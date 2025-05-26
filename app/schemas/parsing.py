@@ -19,6 +19,7 @@ class ParseReq(BaseModel):
         **`AA:DD,3=3W`**, **`A:D`**, etc.
     :type code: str
     """
+
     code: str = Field(
         ...,
         description="Row‑progression code to parse, e.g. **`AA:DD,3=3W`**",
@@ -33,10 +34,3 @@ class ParseReq(BaseModel):
         ),
         "strict": True,
     }
-
-
-
-
-
-
-

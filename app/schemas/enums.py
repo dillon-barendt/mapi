@@ -10,6 +10,7 @@ class SegmentKind(str, Enum):
     equivalent, and gap. Each kind has a specific meaning and application
     in its respective domain.
     """
+
     slice = "slice"
     single = "single"
     equivalent = "equivalent"

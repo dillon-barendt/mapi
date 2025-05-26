@@ -20,6 +20,7 @@ class BulkReq(BaseModel):
         in the bulk request. The list must contain at least 1 and at most 10,000 elements.
     :type codes: conlist(RowCode, min_length=1, max_length=10_000)
     """
+
     codes: conlist(RowCode, min_length=1, max_length=10_000)
 
     model_config = {"title": "BulkParseRequest", "strict": True, "extra": "forbid"}
@@ -39,6 +40,7 @@ class BulkResp(BaseModel):
         respective row code.
     :type parsed: Dict[RowCode, List[Tuple[str, int]]]
     """
+
     parsed: Dict[RowCode, list[tuple[str, int]]]
 
     model_config = {"title": "BulkParseResponse", "frozen": True, "strict": True}

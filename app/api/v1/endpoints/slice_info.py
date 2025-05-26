@@ -1,10 +1,12 @@
 from typing import List
 
-from app.schemas import SliceOut, SliceInfoReq
-from app.services.row_prog import parse_row_progression
 from fastapi import APIRouter
 
+from app.schemas import SliceOut, SliceInfoReq
+from app.services.row_prog import parse_row_progression
+
 router = APIRouter()
+
 
 @router.post("/slice-info", response_model=List[SliceOut])
 async def slice_info(body: SliceInfoReq) -> List[SliceOut]:

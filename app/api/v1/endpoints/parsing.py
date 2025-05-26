@@ -6,19 +6,22 @@ from app.services.row_prog import parse_row_progression
 
 router = APIRouter()
 
+
 @router.post("/parse")
 async def parse_endpoint(body: ParseReq):
     """
-    Handles HTTP POST requests to parse a provided body containing code and computes
-    row progression data. Returns a structured representation of the parsed rows.
+    Handles the parsing of code to extract and structure row progression details.
 
-    :param body: The input request body containing the code to be parsed.
+    This endpoint receives a request body containing code, processes it to generate
+    row progression data, and returns a structured response. If the parsing fails
+    due to invalid input, an HTTPException with a 400 status code is raised.
+
+    :param body: The request payload containing the input code to be processed.
     :type body: ParseReq
-    :return: A dictionary containing the parsed rows with their corresponding name
-             and position.
+    :return: A dictionary containing parsed row progression data where each item
+             includes a name and position.
     :rtype: dict
-    :raises HTTPException: If the provided code is invalid, raises an HTTP 400
-                           exception with an error detail message.
+    :raises HTTPException: If the input code cannot be parsed or is invalid.
     """
     try:
         rows = parse_row_progression(body.code)
@@ -30,38 +33,41 @@ async def parse_endpoint(body: ParseReq):
 @router.post("/bulk-parse", response_model=BulkResp)
 async def bulk_parse(req: BulkReq):
     """
-    Handles bulk parsing of progression codes provided in the request and returns
-    the parsed data. For each code in the request, attempts to parse the data
-    and collects the result. If any errors occur during parsing, they are captured
-    and included in the response.
+    Handles the bulk parsing of codes and provides a structured response with parsed results or error
+    messages if exceptions occur during the parsing process. The API endpoint processes an array of
+    codes and attempts to parse each code using the `parse_row_progression` function. If parsing fails
+    for any code, the error message is included in the response.
 
-    :param req: BulkReq instance containing the list of progression codes to parse.
+    :param req: Incoming request containing a list of codes to be parsed.
     :type req: BulkReq
-    :return: A dictionary with parsed data for each code. If an error occurs during
-        parsing of a specific code, the error message is included in the result
-        corresponding to the code.
-    :rtype: dict
+    :return: Response containing a dictionary of codes mapped to their parsed results or error
+             messages if exceptions occur.
+    :rtype: BulkResp
     """
     out = {}
     for c in req.codes:
         try:
             from app.services.row_prog import parse_row_progression
+
             out[c] = parse_row_progression(c)
         except Exception as e:
             out[c] = {"error": str(e)}
     return {"parsed": out}
 
+
 @router.get("/validate")
 async def validate_endpoint(code: str = Query(..., description="Row‑progression code")):
     """
-    Validates a given row-progression code by attempting to parse it. If the parsing
-    is successful, it returns a response indicating validity. If parsing fails, it
-    returns a response with the error details.
+    Handles the validation of a row-progression code, ensuring that the provided code
+    complies with the expected format and standards. The endpoint leverages the
+    `parse_row_progression` function to perform the validation. If the code is invalid,
+    the endpoint captures the exception and provides an error response.
 
-    :param code: The row-progression code to validate.
+    :param code: The row-progression code provided as input for validation.
     :type code: str
-    :return: A dictionary indicating whether the code is valid and, if invalid,
-             includes error details.
+    :return: A dictionary containing the validation result. If valid, the dictionary contains
+        "valid" set to True. If invalid, the dictionary includes "valid" set to False and
+        an "error" message describing the issue.
     :rtype: dict
     """
     try:

@@ -21,6 +21,7 @@ class GenReq(BaseModel):
         minimum length of one.
     :type rows: conlist(RowIn, min_length=1)
     """
+
     section: SectionName
     rows: conlist(RowIn, min_length=1)
 
@@ -44,6 +45,7 @@ class GenResp(BaseModel):
         must be a positive integer.
     :type row_count: PositiveInt
     """
+
     section: SectionName
     code: RowCode
     row_count: PositiveInt

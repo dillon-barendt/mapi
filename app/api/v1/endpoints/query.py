@@ -4,6 +4,7 @@ from app.services.row_prog import parse_row_progression
 
 router = APIRouter()
 
+
 @router.get("/lookup-position")
 async def lookup(code: str, name: str):
     """

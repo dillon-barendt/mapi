@@ -1,8 +1,10 @@
-from app.schemas import CompareReq
-from app.services.row_prog import parse_row_progression
 from fastapi import APIRouter
 
+from app.schemas import CompareReq
+from app.services.row_prog import parse_row_progression
+
 router = APIRouter()
+
 
 @router.post("/compare")
 async def compare_endpoint(body: CompareReq):

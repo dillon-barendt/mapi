@@ -5,21 +5,19 @@ from app.services.row_prog import compress_section
 
 router = APIRouter()
 
+
 @router.post("/generate", response_model=GenResp)
 async def generate(req: GenReq):
     """
-    Handles the endpoint for generating a response based on the given request.
+    Handles the generation of a compressed section of code based on the
+    provided input.
 
-    This function receives a request payload containing rows of data and a section
-    identifier. It processes the rows by extracting relevant details, compresses
-    the extracted details using an external utility, and returns a structured
-    response with the processed data.
+    This endpoint receives a request object, processes its rows to compute
+    a compressed section of code, and returns the response object.
 
-    :param req: The input object containing the section identifier and rows of
-        data to be processed.
+    :param req: Request object containing the section and rows for processing.
     :type req: GenReq
-    :return: A structured response model containing the section identifier, the
-        compressed code, and a count of the rows processed.
+    :return: Response object containing the generated section, code, and row count.
     :rtype: GenResp
     """
     rows = [(r.name, r.position) for r in req.rows]

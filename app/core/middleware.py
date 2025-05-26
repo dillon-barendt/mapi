@@ -1,7 +1,11 @@
 import time
 
+from fastapi import FastAPI
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
+
+from .config import settings
 
 
 class ResponseTimeMiddleware(BaseHTTPMiddleware):
@@ -23,3 +27,13 @@ class ResponseTimeMiddleware(BaseHTTPMiddleware):
         total_time = time.perf_counter() - start_time
         response.headers["X-Response-Time"] = f"{total_time:.4f}s"
         return response
+
+
+def register_middlewares(app: FastAPI) -> None:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.CORS_ORIGINS,
+        allow_credentials=settings.CORS_ALLOW_CREDENTIALS,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )

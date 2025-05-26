@@ -5,17 +5,25 @@ from app.services.row_prog import parse_row_progression
 
 router = APIRouter()
 
+
 @router.post("/venue-diff")
 async def venue_diff(req: VenueDiffReq):
     """
-    Compares the section progression differences between two venues and returns
-    a diff containing mismatched rows.
+    Compares two sets of venue sections and provides the differences for each row in
+    those sections.
 
-    :param req: The request object containing two venues `a` and `b` which include
-        their respective section progression data.
+    The endpoint processes two venue configurations (`a` and `b`) from the request
+    and identifies mismatches within the sections and their associated rows. Each
+    row within a section is analyzed to determine whether it differs between the
+    two configurations. The output is structured as a mapping of sections, each
+    containing detailed mismatches between the two inputs.
+
+    :param req: The request payload containing two venue objects (`a` and `b`) with
+        sections to be compared.
     :type req: VenueDiffReq
-    :return: A dictionary containing the differences in sections and mismatched row
-        progressions between the two venues.
+
+    :return: A dictionary containing the calculated "venue_diff" that represents
+        mismatched sections and their rows between the two venue configurations.
     :rtype: dict
     """
     diff = {}
@@ -34,19 +42,24 @@ async def venue_diff(req: VenueDiffReq):
         diff[sec] = mismatched
     return {"venue_diff": diff}
 
+
 # ---------- Endpoint ----------
 @router.post("/build‑venue", response_model=VenueOut)
 async def build_venue(body: VenueRequest):
     """
-    Build venue data based on the provided request body. Parses and processes the given
-    sections to calculate row progression and returns the resultant venue details, including
-    all processed sections, rows, and the total number of rows.
+    Handles the creation of a venue based on a given request body. Parses sections included
+    in the request to identify rows and their positions, and compiles the data into a
+    structured response. If an error occurs while parsing a section, an HTTP 400 exception
+    is raised with details about the specific error.
 
-    :param body: The request body containing the venue and section details
+    :param body: The venue creation request containing venue name and sections.
+                 Each section includes a name and a code representing its row
+                 progression.
     :type body: VenueRequest
-    :return: The processed venue data including venue name, sections with rows, and total row count
+
+    :return: Structured response including venue name, parsed sections with row
+             information, and the total count of rows.
     :rtype: VenueOut
-    :raises HTTPException: If row progression parsing fails for any section in the request body
     """
     sections_out: list[SectionOut] = []
     total_rows = 0

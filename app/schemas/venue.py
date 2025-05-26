@@ -1,7 +1,16 @@
 # ─────────────────────  Venue‑building models  ────────────────────────
 from typing import List, Dict
 
-from pydantic import BaseModel, field_validator, conlist, Field, StrictStr, PositiveInt, model_validator, computed_field
+from pydantic import (
+    BaseModel,
+    field_validator,
+    conlist,
+    Field,
+    StrictStr,
+    PositiveInt,
+    model_validator,
+    computed_field,
+)
 
 from app.schemas.shared import SectionName, RowCode
 
@@ -21,6 +30,7 @@ class SectionInput(BaseModel):
     :ivar code: Refers to the designated code identifying this section.
     :type code: RowCode
     """
+
     name: SectionName = Field(..., examples=["101", "Balcony‑L"])
     code: RowCode
 
@@ -42,6 +52,7 @@ class VenueRequest(BaseModel):
         as an instance of `SectionInput`. The list must have a minimum length of 1.
     :type sections: List[SectionInput]
     """
+
     venue_name: StrictStr = Field(..., examples=["Big Bowl Stadium"])
     sections: conlist(SectionInput, min_length=1)
 
@@ -72,6 +83,7 @@ class RowOut(BaseModel):
     :ivar position: The position index of the row, which must be a positive integer.
     :type position: PositiveInt
     """
+
     name: StrictStr
     position: PositiveInt
 
@@ -94,6 +106,7 @@ class SectionOut(BaseModel):
     :ivar rows: Contains the list of rows associated with the section.
     :type rows: List[RowOut]
     """
+
     name: SectionName
     rows: List[RowOut]
 
@@ -122,6 +135,7 @@ class VenueOut(BaseModel):
     :ivar total_rows: The total number of rows across all sections in the venue.
     :type total_rows: PositiveInt
     """
+
     venue_name: StrictStr
     sections: List[SectionOut]
     total_rows: PositiveInt
@@ -179,6 +193,7 @@ class VenueDiffReq(BaseModel):
     :ivar b: The second venue object to be compared.
     :type b: Venue
     """
+
     a: Venue
     b: Venue
 
@@ -199,6 +214,7 @@ class RowIn(BaseModel):
     :ivar position: The position number associated with the row.
     :type position: PositiveInt
     """
+
     name: StrictStr
     position: PositiveInt
 

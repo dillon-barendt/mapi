@@ -4,17 +4,28 @@ from typing import Any, Dict
 from pydantic import AnyHttpUrl, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from .constants import APP_DESCRIPTION, APP_DEFAULT_CORS_METHODS
-
-__author__ = "Dillon Barendt"
-
-# Extracted constant ----------------------------------------------------------
+from .constants import (
+    APP_DESCRIPTION,
+    APP_DEFAULT_CORS_METHODS,
+    VENUE_TAG_DESCRIPTION,
+    API_VERSION,
+    API_PREFIX,
+    APP_NAME,
+    DEBUG_DEFAULT,
+    SUPPORT_EMAIL,
+    CORS_DEFAULT_ORIGINS,
+    CORS_ALLOW_CREDENTIALS,
+    DOCS_REDIRECT_URL,
+    DOCS_URL,
+    REDOC_URL,
+    OPENAPI_URL,
+    API_PREFIX,
+)
 
 
 class Settings(BaseSettings):
-    """Application configuration settings."""
+    """Application settings configuration."""
 
-    # Environment / model configuration ---------------------------------------
     model_config = SettingsConfigDict(
         env_prefix="APP_",
         env_file=".env",
@@ -23,63 +34,49 @@ class Settings(BaseSettings):
         extra="ignore",
         use_enum_values=True,
     )
-
-    # Application metadata -----------------------------------------------------
-    app_name: str = "Mapi Suite"
+    app_name: str = APP_NAME
     description: str = APP_DESCRIPTION
-    debug: bool = True
-    version: str = "1.0.0"
+    debug: bool = DEBUG_DEFAULT
+    version: str = API_VERSION
+    api_prefix: str = API_PREFIX
     support_email: str = Field(
-        default="dillon.barendt@ticket-vision.com",
+        default=SUPPORT_EMAIL,
         description="Primary contact e-mail address for support",
     )
 
-    # CORS configuration -------------------------------------------------------
     cors_origins: list[AnyHttpUrl] = Field(
-        default=[
-            "https://localhost:3000",
-            "http://localhost:8000",
-            "https://ticketvision.com",
-            "http://0.0.0.0:8000",
-            "https://connect.ticket-vision.com",
-            "https://connect.ticket-vision.com:8000",
-        ],
+        default=CORS_DEFAULT_ORIGINS,
         description="Allowed CORS origins",
     )
-    cors_allow_credentials: bool = True
+    cors_allow_credentials: bool = CORS_ALLOW_CREDENTIALS
     cors_allow_methods: list[str] = Field(
         default_factory=lambda: APP_DEFAULT_CORS_METHODS.copy(),
         description="Allowed CORS HTTP methods",
     )
 
-    # API tags -----------------------------------------------------------------
-    ROW_PROGRESSION_TAG: str = Field(
-        default="Row Progression",
-        description="Tag for row progression related endpoints",
-    )
+    ROW_PROGRESSION_TAG: str = "Row Progression"
 
-    # FastAPI kwargs builder ---------------------------------------------------
+    @property
     def build_fastapi_kwargs(self, **extra_kwargs: Any) -> Dict[str, Any]:
-        """
-        Construct the kwargs dict to initialise FastAPI.
-
-        Extra keyword arguments override the defaults.
-        """
         base_kwargs: Dict[str, Any] = {
             "title": self.app_name,
             "description": self.description,
             "version": self.version,
             "debug": self.debug,
-            "docs_redirect_url": None,
-            "docs_url": "/v1/docs",
-            "redoc_url": "/v1/redoc",
-            "openapi_url": "/v1/openapi.json",
+            "docs_redirect_url": DOCS_REDIRECT_URL,
+            "docs_url": DOCS_URL,
+            "redoc_url": REDOC_URL,
+            "openapi_url": OPENAPI_URL,
             "support_email": self.support_email,
             "support_url": lambda _: f"mailto:{self.support_email}",
-            "prefix": "/v1",
+            "prefix": API_PREFIX,
         }
         base_kwargs.update(extra_kwargs)
         return base_kwargs
+
+    @property
+    def fastapi_kwargs(self) -> Dict[str, Any]:
+        return self.build_fastapi_kwargs
 
 
 @lru_cache()
@@ -88,5 +85,5 @@ def get_settings() -> Settings:
     return Settings()
 
 
-# Global settings instance ----------------------------------------------------
+# GLOBAL SETTINGS
 settings = get_settings()

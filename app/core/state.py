@@ -3,8 +3,10 @@
 ASGI Specification: https://asgi.readthedocs.io/en/latest/specs/main.html
 ASGI: Lifespan Protocol: https://asgi.readthedocs.io/en/latest/specs/lifespan.html
 """
+
 from contextlib import asynccontextmanager
 from fastapi.applications import FastAPI
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

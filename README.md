@@ -1,8 +1,8 @@
-# 🏟️ **Row-Progression Suite: Comprehensive API Toolkit** ✨
+# 🏟️ **Mapi: Venue Suite** ✨
 
 ## **🚀 Overview**
 
-The **Row-Progression Suite** is a FastAPI-based toolkit designed to simplify **parsing**, **generating**, and **diffing row progression codes**, facilitating the creation and management of structured venue configurations. This app offers powerful tools for working with **section-row mappings** in **ticket marketplaces**, enabling efficient workflows with row progression data and dynamic schema validations.
+**Mapi** is a FastAPI-based toolkit designed to simplify **parsing**, **generating**, and **diffing row progression codes**, facilitating the creation and management of structured venue configurations. This app offers powerful tools for working with **section-row mappings** in **ticket marketplaces**, enabling efficient workflows with row progression data and dynamic schema validations.
 
 
 ## **📋 Key Features**

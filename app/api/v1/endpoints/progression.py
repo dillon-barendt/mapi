@@ -10,6 +10,8 @@ from app.schemas import (
     MapiAgentRequest,
     MapiAgentResp,
     ParseReq,
+    RowImportRequest,
+    RowImportResponse,
     RowProgression,
     StatsResp,
     VenueDiffReq,
@@ -18,6 +20,7 @@ from app.schemas import (
     VenueRequest,
 )
 from app.schemas import validators as row_progression
+from app.services import SpreadsheetRowRecord, compress_section_rows
 
 router = APIRouter()
 
@@ -126,6 +129,31 @@ def venue_diff(body: VenueDiffReq) -> VenueDiffResp:
     except ValueError as error:
         raise _bad_request(error) from error
     return VenueDiffResp.model_validate({"venue_diff": diff})
+
+
+@router.post(
+    "/import-rows",
+    response_model=RowImportResponse,
+    summary="Import spreadsheet-shaped rows",
+    description=(
+        "Converts section,row,position records from spreadsheet-style broker "
+        "workflows into compact row progression DSL values."
+    ),
+)
+def import_rows(req: RowImportRequest) -> RowImportResponse:
+    try:
+        records = [
+            SpreadsheetRowRecord(
+                section=row.section,
+                row=row.row,
+                position=row.position,
+            )
+            for row in req.rows
+        ]
+        sections = compress_section_rows(records)
+    except ValueError as error:
+        raise _bad_request(error) from error
+    return RowImportResponse(sections=sections)
 
 
 @router.post(

@@ -78,6 +78,40 @@ def test_venue_diff_endpoint_has_typed_response_shape() -> None:
     }
 
 
+def test_import_rows_endpoint_returns_compact_section_codes() -> None:
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/row-progression/import-rows",
+            json={
+                "rows": [
+                    {"section": "101", "row": "AA", "position": 1},
+                    {"section": "101", "row": "BB", "position": 2},
+                    {"section": "101", "row": "13", "position": 20},
+                    {"section": "101", "row": "13W", "position": 20},
+                ]
+            },
+        )
+
+    assert response.status_code == 200
+    assert response.json() == {"sections": {"101": "AA:BB,3:19!,13=13W"}}
+
+
+def test_import_rows_endpoint_returns_400_for_invalid_import() -> None:
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/row-progression/import-rows",
+            json={
+                "rows": [
+                    {"section": "101", "row": "A", "position": 1},
+                    {"section": "101", "row": "A", "position": 2},
+                ]
+            },
+        )
+
+    assert response.status_code == 400
+    assert "Duplicate row name" in response.json()["detail"]
+
+
 def test_invalid_code_returns_400() -> None:
     with TestClient(app) as client:
         response = client.post(

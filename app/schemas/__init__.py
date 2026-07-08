@@ -1,5 +1,6 @@
 from .agent import MapiAgentAnalysis, MapiAgentRequest, MapiAgentResp
 from .code import CodeResp, StatsResp
+from .imports import RowImportRecord, RowImportRequest, RowImportResponse
 from .parse import BulkParseResp, BulkParsingRequest
 from .parse import ParsingRequest as ParseReq
 from .row import RowOut, RowProgression
@@ -24,4 +25,7 @@ __all__ = [
     "MapiAgentAnalysis",
     "MapiAgentRequest",
     "MapiAgentResp",
+    "RowImportRecord",
+    "RowImportRequest",
+    "RowImportResponse",
 ]

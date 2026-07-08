@@ -1,3 +1,4 @@
+from .agent import MapiAgentAnalysis, MapiAgentRequest, MapiAgentResp
 from .code import CodeResp, StatsResp
 from .parse import BulkParseResp, BulkParsingRequest
 from .parse import ParsingRequest as ParseReq
@@ -20,4 +21,7 @@ __all__ = [
     "BulkParseResp",
     "CodeResp",
     "StatsResp",
+    "MapiAgentAnalysis",
+    "MapiAgentRequest",
+    "MapiAgentResp",
 ]

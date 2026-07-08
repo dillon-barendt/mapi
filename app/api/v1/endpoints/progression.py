@@ -2,10 +2,13 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, status
 
+from app.agents import run_mapi_agent
 from app.schemas import (
     BulkParseResp,
     BulkParsingRequest,
     CodeResp,
+    MapiAgentRequest,
+    MapiAgentResp,
     ParseReq,
     RowProgression,
     StatsResp,
@@ -123,3 +126,20 @@ def venue_diff(body: VenueDiffReq) -> VenueDiffResp:
     except ValueError as error:
         raise _bad_request(error) from error
     return VenueDiffResp.model_validate({"venue_diff": diff})
+
+
+@router.post(
+    "/agent/analyze",
+    response_model=MapiAgentResp,
+    summary="Analyze a row progression with the Mapi agent",
+    description=(
+        "Runs the Pydantic AI-backed Mapi agent against a compact section code. "
+        "The default local agent requires no external model key and returns "
+        "parser-grounded mapping, Redis, and review-workflow guidance."
+    ),
+)
+async def analyze_with_agent(req: MapiAgentRequest) -> MapiAgentResp:
+    try:
+        return await run_mapi_agent(req)
+    except ValueError as error:
+        raise _bad_request(error) from error

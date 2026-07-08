@@ -1,197 +1,193 @@
-# 🏟️ **Mapi: Venue Suite** ✨
+# Mapi
 
-## **🚀 Overview**
+Mapi is a FastAPI/Python case study for a ticketing infrastructure problem:
+representing venue section-row maps as compact atomic progression strings that
+can be parsed, validated, diffed, compressed, cached, and indexed.
 
-**Mapi** is a FastAPI-based toolkit designed to simplify **parsing**, **generating**, and **diffing row progression codes**, facilitating the creation and management of structured venue configurations. This app offers powerful tools for working with **section-row mappings** in **ticket marketplaces**, enabling efficient workflows with row progression data and dynamic schema validations.
+The examples in this repository are synthetic. The project is intended as a
+public engineering portfolio artifact, not a claim of production deployment.
 
+## Problem
 
-## **📋 Key Features**
+Ticket inventory systems need a shared understanding of section-row layout. A
+single venue section can contain numeric rows, alphabetic rows, repeated-letter
+rows, skipped physical positions, and equivalent accessible-row labels. Storing
+every expanded row everywhere is noisy; storing only unvalidated strings is
+risky.
 
-- 🔍 **Parse** row progression codes into structured models (with strict validation).
-- 🛠️ **Build** comprehensive venue configurations with logical row mappings and sections.
-- 🆚 **Diff** venues to track changes and mismatched sections/rows.
-- 📦 **Generate compressed representations** of section data for efficient storage and transmission.
-- 💥 Rich support for **row progression logic**, including **slicing**, **equivalent rows**, and **gaps**.
+Mapi keeps the compact string as the source value and derives typed rows,
+statistics, venue diffs, and Redis-friendly cache/index records from it.
 
+## Why Ticketing Venue Maps Are Hard
 
+- Brokers, exchanges, and internal tools often use different row naming
+  conventions for the same physical place.
+- `AA:DD` means `AA`, `BB`, `CC`, `DD` in this domain, not Excel-style column
+  labels.
+- A row can exist physically but not belong to a section, so gaps must advance
+  position without returning a row.
+- Two row labels can point to one physical position, such as `13=13W`.
+- Small section-map changes can affect inventory matching, marketplace quality
+  checks, and review workflows.
 
-## **🧩 Core Concepts**
+## DSL Examples
 
-### **1. Row Progression Codes**
+```text
+1:4                         -> 1, 2, 3, 4
+5:1                         -> 5, 4, 3, 2, 1
+A:D                         -> A, B, C, D
+AA:DD                       -> AA, BB, CC, DD
+A,B:C!,D                    -> A at position 1, D at position 4
+1:2,3=3W                    -> 3 and 3W share position 3
+DD:AA,A:C,1:4,5!,6:10:2    -> mixed descending, alpha, numeric, gap, stepped
+```
 
-A **row progression code** is a convenient string representation describing row names and positions within a section. These codes can be as simple or as complex as needed.
+See [docs/DOMAIN.md](docs/DOMAIN.md) for the parser rules.
 
-#### **Examples**:
-1. Simple code: `"1:3"`  
-   - Describes 3 rows: `1`, `2`, and `3`, with positions 1, 2, and 3.
+## API Examples
 
-2. Complex code: `"DD:AA,A:C,1:4,5!,6:10:2,12=12W,ZZZ"`  
-   - Describes rows:
-     - `DD = 1`, `CC = 2`, `BB = 3`, `AA = 4`, `A = 5`, `B = 6`, `C = 7`, `1 = 8`, `12W = 16`, and `ZZZ = 17`.
+Run locally:
 
-#### **Advanced Features of Row Progressions**:
-- 🎭 **Equivalent Rows**: Use `=` to indicate rows with equal positions (e.g., `3=3W`).
-- 🚀 **Row Slices**: Define ranges using `:` with optional stepping (`A:D:2`, `1:4:2`).
-- 🚫 **Gap Slices**: Mark gaps with `!` to exclude them from sections (`A:C!`).
+```bash
+python -m pip install -e ".[dev]"
+uvicorn app.main:app --reload
+```
 
----
+Parse one section:
 
-### **2. Atomic Codes**
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/row-progression/parse \
+  -H 'content-type: application/json' \
+  -d '{"code":"AA:DD,A:C,1:12,13=13W"}'
+```
 
-Atomic codes represent individual rows. They come in two kinds:
-1. **Pure** (e.g., `A`, `AA`, `1`, `123`).
-2. **Mixed** (e.g., `B10`, `21WC`).
+Compress typed rows:
 
-#### **Pure Atomic Code Types**:
-- `NUMBERS` (e.g., `1`, `2`, `3`).
-- `LETTERS_1` (e.g., `A`, `B`, `C`).
-- `LETTERS_2` (e.g., `AA`, `BB`, `CC`).
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/row-progression/compress \
+  -H 'content-type: application/json' \
+  -d '{
+    "code": "manual",
+    "rows": [
+      {"name": "A", "position": 3},
+      {"name": "B", "position": 5},
+      {"name": "BW", "position": 5}
+    ]
+  }'
+```
 
-Atomic codes are validated to ensure consistency 🌟.
+Response:
 
-
-### **3. Venue Models**
-
-#### **Building Venues 🌟**
-- Each **venue** is composed of **sections**, and each section has a **row progression code** that determines its rows.
-- Example Workflow:
-  1. Define venue name and sections.
-  2. Parse row progression codes for sections.
-  3. Validate row uniqueness across sections.
-
-
-### **4. Programmatic APIs**
-
-- **`/build-venue` Endpoint**:
-  Constructs and validates a venue based on the request body. Dynamically parses row progressions for sections and calculates the total row count.
-
-- **`/venue-diff` Endpoint**:
-  Compares two venues and identifies mismatched rows/sections to flag configuration changes.
-
-- **`/generate` Endpoint**:
-  Compresses row and section data into a compact representation, reducing storage overhead.
-
-- **`/slice-info` Endpoint**:
-  Provides details on row slices, including type (single, slice, gap, equivalent), position ranges, and more.
-
-
-## **🛠️ API Examples**
-Here are some common use cases with their corresponding input and output.
-
-### **1. Build Venue**
-**Request**:
 ```json
-POST /build-venue
+{"code": "1:2!,A,4!,B=BW"}
+```
+
+All domain endpoints live under `/api/v1/row-progression`. OpenAPI docs are
+available at `/docs` when the app is running.
+
+## Redis Usage
+
+The compact code can be stored as a Redis string:
+
+```redis
+SET venue:demo-arena:section:101:row_progression "AA:DD,A:C,1:12,13=13W"
+```
+
+It can also live in a section hash:
+
+```redis
+HSET venue:demo-arena:section:101 \
+  row_progression "AA:DD,A:C,1:12,13=13W" \
+  parser_version "0.1.0" \
+  row_count "20"
+```
+
+Expanded rows can be cached as Redis JSON for agent workflows:
+
+```json
 {
-  "venue_name": "Big Bowl Stadium",
-  "sections": [
-    { "name": "101", "code": "A:C,1:3" },
-    { "name": "102", "code": "D:F,G:H!" }
+  "venue_id": "demo-arena",
+  "section_id": "101",
+  "row_progression": "AA:DD,A:C,1:12,13=13W",
+  "rows": [
+    {"name": "AA", "position": 1},
+    {"name": "BB", "position": 2},
+    {"name": "13", "position": 20},
+    {"name": "13W", "position": 20}
   ]
 }
 ```
 
+Venue diffs can trigger downstream marketplace or inventory review workflows:
+row-count changes, new aliases, removed rows, or suspicious gaps become auditable
+review events. See [docs/REDIS_MODEL.md](docs/REDIS_MODEL.md).
 
-**Response**:
-```json
-{
-  "venue_name": "Big Bowl Stadium",
-  "sections": [
-    {
-      "name": "101",
-      "rows": [
-        { "name": "A", "position": 1 },
-        { "name": "B", "position": 2 },
-        { "name": "C", "position": 3 },
-        { "name": "1", "position": 4 },
-        { "name": "2", "position": 5 },
-        { "name": "3", "position": 6 }
-      ]
-    },
-    {
-      "name": "102",
-      "rows": [
-        { "name": "D", "position": 1 },
-        { "name": "E", "position": 2 },
-        { "name": "F", "position": 3 }
-      ]
-    }
-  ],
-  "total_rows": 9
-}
+## Architecture
+
+```mermaid
+flowchart LR
+    A["Input venue DSL"] --> B["Parser"]
+    B --> C["Typed row model"]
+    C --> D["FastAPI response"]
+    D --> E["Redis cache/index"]
+    E --> F["Agent review workflow"]
 ```
 
+Key files:
 
----
+- `app/schemas/validators.py`: parser, compressor, stats, venue build, venue
+  diff
+- `app/schemas/*.py`: Pydantic request and response models
+- `app/api/v1/endpoints/progression.py`: versioned FastAPI endpoints
+- `docs/ARCHITECTURE.md`: architecture notes and parser flow
 
-### **2. Venue Diff**
-**Request**:
-```json
-POST /venue-diff
-{
-  "a": {
-    "name": "Old Venue",
-    "sections": {"101": "A:C,1:3"}
-  },
-  "b": {
-    "name": "New Venue",
-    "sections": {"101": "1:C", "102": "X:Z"}
-  }
-}
+## Testing Strategy
+
+The suite covers:
+
+- Numeric, single-letter, and multi-letter repeated-letter ranges
+- Ascending, descending, and stepped ranges
+- Mixed atomic row codes
+- Equivalent rows with `=`
+- Gap rows with `!`
+- Duplicate row detection
+- `parse -> compress -> parse` round trips
+- API response contracts
+
+Run:
+
+```bash
+black --check .
+isort --check-only .
+ruff check .
+mypy app
+pytest --cov=app --cov-report=term-missing
 ```
 
+## Local Development
 
-**Response**:
-```json
-{
-  "venue_diff": {
-    "101": {
-      "A": { "a": 1, "b": null }, 
-      "B": { "a": 2, "b": null }
-    },
-    "102": {
-      "X": { "a": null, "b": 1 },
-      "Y": { "a": null, "b": 2 },
-      "Z": { "a": null, "b": 3 }
-    }
-  }
-}
-```
+Python 3.13 is retained because the current FastAPI and Pydantic dependency set
+supports it.
 
-
-## **🔮 Behind the Scenes: Parsing Logic**
-
-The **row progression parser** powers much of the suite's capabilities. It breaks down row codes into structured models and supports advanced parsing rules.
-
-#### **Highlights**:
-- Converts row slices (e.g., `"A:C"`) into row sequences (`A, B, C`).
-- Identifies gaps via `!` and equivalent rows via `=`.
-
-Example with `"A:C!,D:F,E:G=H"`:
-- Output:  
-  - Gap Rows: `"A:C"` (excluded from positions).
-  - Equivalent Rows: `"E:G=H"` (grouped under shared position).
-
-
-## **🎉 Why Use This Toolkit?**
-
-- 🌟 **Simple & Powerful**: Intuitive APIs for complex venue data.
-- 🔍 **Robust Validation**: Rigorous checks on input to ensure data consistency.
-- ⚡ **High Performance**: Efficient parsing and computation of row progressions.
-- 🔧 **Customizable**: Extendable for different venues and progression rules.
-
-
-## 💻 **Getting Started**
-
-### **Install Dependencies**
-```shell script
-pip install fastapi uvicorn pydantic
-```
-
-### **Run the App**
-```shell script
+```bash
+python3.13 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
 uvicorn app.main:app --reload
 ```
 
-### **Access API Docs**
-Visit the interactive Swagger UI at `http://127.0.0.1:8000/docs`.
+## Recruiter-Facing Summary
+
+Mapi demonstrates domain modeling, parser correctness, typed FastAPI contracts,
+property-based testing, and cache/index design around a real class of ticketing
+data problem. The value is not the number of endpoints; it is that compact venue
+DSL strings become deterministic, validated infrastructure objects that can
+drive search, diffing, and human-in-the-loop review workflows.
+
+## More Documentation
+
+- [docs/DOMAIN.md](docs/DOMAIN.md)
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- [docs/REDIS_MODEL.md](docs/REDIS_MODEL.md)
+- [docs/EXAMPLES.md](docs/EXAMPLES.md)

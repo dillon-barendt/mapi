@@ -1,8 +1,9 @@
+from .code import CodeResp, StatsResp
+from .parse import BulkParseResp, BulkParsingRequest
+from .parse import ParsingRequest as ParseReq
 from .row import RowOut, RowProgression
 from .section import SectionInput, SectionOut
-from .venue import VenueRequest, VenueOut, Venue, VenueDiffReq
-from .parse import ParsingRequest as ParseReq, BulkParsingRequest, BulkParseResp
-from .code import CodeResp, StatsResp
+from .venue import Venue, VenueDiffReq, VenueDiffResp, VenueOut, VenueRequest
 
 __all__ = [
     "RowOut",
@@ -13,6 +14,7 @@ __all__ = [
     "VenueOut",
     "Venue",
     "VenueDiffReq",
+    "VenueDiffResp",
     "ParseReq",
     "BulkParsingRequest",
     "BulkParseResp",

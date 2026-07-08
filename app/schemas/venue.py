@@ -1,119 +1,185 @@
-from typing import Annotated, Sequence, Dict
-from pydantic import BaseModel, Field, field_validator, computed_field
-from pydantic.types import StrictStr, NonNegativeInt
-from pydantic.config import ConfigDict
+from typing import Annotated
 
-from .section import SectionOut, SectionInput
+from pydantic import BaseModel, ConfigDict, Field, computed_field, field_validator
+from pydantic.types import NonNegativeInt, PositiveInt, StrictStr
+
+from .section import SectionInput, SectionOut
 
 
 class VenueRequest(BaseModel):
-    """
-    Representation of a request to define or modify a venue and its associated sections.
+    """Compact venue request containing section row progression codes."""
 
-    This class is used to encapsulate the details of a venue, including its name
-    and the sections it contains. Each venue must have a uniquely identifiable name,
-    and each section within the venue must also have a unique name
-    to prevent conflicts or ambiguity.
-
-    :ivar venue_name: Name of the venue.
-    :type venue_name: str
-    :ivar sections: List of sections in this venue, along with their progression
-        codes, ensuring no duplicate section names.
-    :type sections: Sequence[SectionInput]
-    """
-
-    venue_name: Annotated[StrictStr, Field(min_length=1)] = Field(
-        ..., description="Name of the venue."
-    )
+    venue_name: Annotated[
+        StrictStr,
+        Field(
+            min_length=1, description="Synthetic venue name.", examples=["Demo Arena"]
+        ),
+    ]
     sections: Annotated[
-        Sequence[SectionInput],
+        list[SectionInput],
         Field(
             min_length=1,
-            description="List of sections in this venue, with progression codes.",
+            description="Sections in this venue with compact progression codes.",
         ),
     ]
 
     @field_validator("sections")
     @classmethod
     def _verify_unique_sections(
-        cls, section_inputs: Sequence[SectionInput]
-    ) -> Sequence[SectionInput]:
-        def _find_duplicated_names(names: Sequence[str]) -> set[str]:
-            return {name for name in names if names.count(name) > 1}
-
+        cls, section_inputs: list[SectionInput]
+    ) -> list[SectionInput]:
         section_names = [section.name for section in section_inputs]
-        duplicates = _find_duplicated_names(section_names)
+        duplicates = {name for name in section_names if section_names.count(name) > 1}
         if duplicates:
             raise ValueError(
                 f"Duplicate section names: {', '.join(sorted(duplicates))}"
             )
         return section_inputs
 
+    model_config = ConfigDict(
+        title="VenueRequest",
+        strict=True,
+        extra="forbid",
+        json_schema_extra={
+            "examples": [
+                {
+                    "venue_name": "Demo Arena",
+                    "sections": [
+                        {"name": "101", "code": "AA:DD,A:C,1:12,13=13W"},
+                        {"name": "102", "code": "A,B:C!,D"},
+                    ],
+                }
+            ]
+        },
+    )
+
 
 class VenueOut(BaseModel):
+    """Expanded venue response."""
+
     venue_name: Annotated[
         StrictStr,
-        Field(min_length=1, description="Name of the venue."),
-    ]
-    sections: Annotated[
-        Sequence[SectionOut],
         Field(
-            min_length=1,
-            description="List of sections in this venue, with expanded rows.",
+            min_length=1, description="Synthetic venue name.", examples=["Demo Arena"]
         ),
     ]
-    # Remove the regular field here:
-    # total_rows: Annotated[NonNegativeInt, Field(default=0, description="...")]
+    sections: Annotated[
+        list[SectionOut],
+        Field(
+            min_length=1,
+            description="Sections in this venue with expanded rows.",
+        ),
+    ]
 
-    @computed_field(return_type=NonNegativeInt)
+    @computed_field(return_type=NonNegativeInt)  # type: ignore[prop-decorator]
     @property
-    def total_rows(self) -> NonNegativeInt:
+    def total_rows(self) -> int:
         return sum(section.row_count for section in self.sections)
+
+    model_config = ConfigDict(
+        title="VenueOut",
+        strict=True,
+        frozen=True,
+        json_schema_extra={
+            "examples": [
+                {
+                    "venue_name": "Demo Arena",
+                    "sections": [
+                        {
+                            "name": "101",
+                            "rows": [
+                                {"name": "AA", "position": 1},
+                                {"name": "BB", "position": 2},
+                            ],
+                            "row_count": 2,
+                        }
+                    ],
+                    "total_rows": 2,
+                }
+            ]
+        },
+    )
 
 
 class Venue(BaseModel):
-    """
-    Represents a venue with a name and associated sections.
-
-    This class is designed to define a venue entity with a specific name
-    and a collection of sections. Each section has a name and corresponding
-    progression code. It enforces strict validation rules on the data provided
-    to ensure consistency and correctness. The configuration of this model
-    disallows extra fields and requires a strict mapping for defined attributes.
-
-    :ivar name: The name of the venue.
-    :type name: StrictStr
-    :ivar sections: A dictionary mapping section names to progression codes.
-    :type sections: Dict[StrictStr, StrictStr]
-    """
+    """Compact venue representation used for structural diffs."""
 
     name: Annotated[
         StrictStr,
         Field(
-            min_length=1,
-            description="Name of the venue.",
+            min_length=1, description="Synthetic venue name.", examples=["Demo Arena"]
         ),
     ]
-    sections: Dict[StrictStr, StrictStr]  # section name → progression code
+    sections: dict[StrictStr, StrictStr] = Field(
+        ...,
+        min_length=1,
+        description="Mapping of section name to row progression code.",
+        examples=[{"101": "A:C", "102": "A,B!,C"}],
+    )
 
     model_config = ConfigDict(title="Venue", strict=True, extra="forbid")
 
 
 class VenueDiffReq(BaseModel):
-    """
-    Represents a data model for comparing two venues.
-
-    This class is used for encapsulating two `Venue` objects to enable detailed
-    comparison or operations between them. It inherits from `BaseModel` and
-    enforces strict validation rules to ensure its data integrity.
-
-    :ivar a: The first `Venue` object to compare.
-    :type a: Venue
-    :ivar b: The second `Venue` object to compare.
-    :type b: Venue
-    """
+    """Pair of compact venues to compare."""
 
     a: Venue
     b: Venue
 
-    model_config = ConfigDict(title="VenueDiffReq", strict=True, extra="forbid")
+    model_config = ConfigDict(
+        title="VenueDiffReq",
+        strict=True,
+        extra="forbid",
+        json_schema_extra={
+            "examples": [
+                {
+                    "a": {"name": "Old Demo", "sections": {"101": "A:C"}},
+                    "b": {"name": "New Demo", "sections": {"101": "A:B,D"}},
+                }
+            ]
+        },
+    )
+
+
+class RowPositionDelta(BaseModel):
+    """Position comparison for one row name."""
+
+    a: PositiveInt | None = Field(
+        None,
+        description="Position in the first venue, or null when absent.",
+        examples=[2],
+    )
+    b: PositiveInt | None = Field(
+        None,
+        description="Position in the second venue, or null when absent.",
+        examples=[None],
+    )
+
+    model_config = ConfigDict(title="RowPositionDelta", strict=True, extra="forbid")
+
+
+class VenueDiffResp(BaseModel):
+    """Venue diff keyed by section name and row name."""
+
+    venue_diff: dict[str, dict[str, RowPositionDelta]] = Field(
+        ...,
+        description="Changed row positions keyed by section and row name.",
+    )
+
+    model_config = ConfigDict(
+        title="VenueDiffResp",
+        strict=True,
+        extra="forbid",
+        json_schema_extra={
+            "examples": [
+                {
+                    "venue_diff": {
+                        "101": {
+                            "C": {"a": 3, "b": None},
+                            "D": {"a": None, "b": 3},
+                        }
+                    }
+                }
+            ]
+        },
+    )

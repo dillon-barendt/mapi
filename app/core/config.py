@@ -1,25 +1,21 @@
 from functools import lru_cache
-from typing import Any, Dict
+from typing import Any
 
-from pydantic import AnyHttpUrl, Field
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .constants import (
-    APP_DESCRIPTION,
-    APP_DEFAULT_CORS_METHODS,
-    VENUE_TAG_DESCRIPTION,
+    API_DESCRIPTION,
     API_VERSION,
-    API_PREFIX,
     APP_NAME,
-    DEBUG_DEFAULT,
-    SUPPORT_EMAIL,
-    CORS_DEFAULT_ORIGINS,
     CORS_ALLOW_CREDENTIALS,
-    DOCS_REDIRECT_URL,
+    CORS_ALLOW_METHODS,
+    CORS_DEFAULT_ORIGINS,
+    DEBUG_DEFAULT,
     DOCS_URL,
-    REDOC_URL,
     OPENAPI_URL,
-    API_PREFIX,
+    REDOC_URL,
+    SUPPORT_EMAIL,
 )
 
 
@@ -34,56 +30,45 @@ class Settings(BaseSettings):
         extra="ignore",
         use_enum_values=True,
     )
+
     app_name: str = APP_NAME
-    description: str = APP_DESCRIPTION
+    description: str = API_DESCRIPTION
     debug: bool = DEBUG_DEFAULT
     version: str = API_VERSION
-    api_prefix: str = API_PREFIX
     support_email: str = Field(
         default=SUPPORT_EMAIL,
-        description="Primary contact e-mail address for support",
+        description="Public support email for generated OpenAPI contact metadata.",
     )
-
-    cors_origins: list[AnyHttpUrl] = Field(
+    cors_origins: list[str] = Field(
         default=CORS_DEFAULT_ORIGINS,
-        description="Allowed CORS origins",
+        description="Allowed CORS origins.",
     )
     cors_allow_credentials: bool = CORS_ALLOW_CREDENTIALS
     cors_allow_methods: list[str] = Field(
-        default_factory=lambda: APP_DEFAULT_CORS_METHODS.copy(),
-        description="Allowed CORS HTTP methods",
+        default_factory=lambda: CORS_ALLOW_METHODS.copy(),
+        description="Allowed CORS HTTP methods.",
     )
-
-    ROW_PROGRESSION_TAG: str = "Row Progression"
+    row_progression_tag: str = "Row Progression"
 
     @property
-    def build_fastapi_kwargs(self, **extra_kwargs: Any) -> Dict[str, Any]:
-        base_kwargs: Dict[str, Any] = {
+    def build_fastapi_kwargs(self) -> dict[str, Any]:
+        return {
             "title": self.app_name,
             "description": self.description,
             "version": self.version,
             "debug": self.debug,
-            "docs_redirect_url": DOCS_REDIRECT_URL,
             "docs_url": DOCS_URL,
             "redoc_url": REDOC_URL,
             "openapi_url": OPENAPI_URL,
-            "support_email": self.support_email,
-            "support_url": lambda _: f"mailto:{self.support_email}",
-            "prefix": API_PREFIX,
+            "contact": {"name": "Mapi maintainers", "email": self.support_email},
         }
-        base_kwargs.update(extra_kwargs)
-        return base_kwargs
-
-    @property
-    def fastapi_kwargs(self) -> Dict[str, Any]:
-        return self.build_fastapi_kwargs
 
 
-@lru_cache()
+@lru_cache
 def get_settings() -> Settings:
     """Return a cached ``Settings`` instance."""
+
     return Settings()
 
 
-# GLOBAL SETTINGS
 settings = get_settings()

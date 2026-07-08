@@ -2,28 +2,39 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [development, main]
   pull_request:
-    branches: [ main ]
+    branches: [development, main]
 
 jobs:
-  build-test:
+  quality:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
+          python-version: "3.13"
+          cache: pip
 
-
-      - name: Install dependencies
+      - name: Install package and dev tools
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m pip install -e ".[dev]"
 
-      - name: Run Tests
+      - name: Check formatting
         run: |
-          pytest --maxfail=1 --disable-warnings -q
+          black --check .
+          isort --check-only .
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Type check
+        run: mypy app
+
+      - name: Test with coverage
+        run: pytest --cov=app --cov-report=term-missing

@@ -2,11 +2,16 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, status
 
+from app.agents import run_mapi_agent
 from app.schemas import (
     BulkParseResp,
     BulkParsingRequest,
     CodeResp,
+    MapiAgentRequest,
+    MapiAgentResp,
     ParseReq,
+    RowImportRequest,
+    RowImportResponse,
     RowProgression,
     StatsResp,
     VenueDiffReq,
@@ -15,6 +20,7 @@ from app.schemas import (
     VenueRequest,
 )
 from app.schemas import validators as row_progression
+from app.services import SpreadsheetRowRecord, compress_section_rows
 
 router = APIRouter()
 
@@ -123,3 +129,45 @@ def venue_diff(body: VenueDiffReq) -> VenueDiffResp:
     except ValueError as error:
         raise _bad_request(error) from error
     return VenueDiffResp.model_validate({"venue_diff": diff})
+
+
+@router.post(
+    "/import-rows",
+    response_model=RowImportResponse,
+    summary="Import spreadsheet-shaped rows",
+    description=(
+        "Converts section,row,position records from spreadsheet-style broker "
+        "workflows into compact row progression DSL values."
+    ),
+)
+def import_rows(req: RowImportRequest) -> RowImportResponse:
+    try:
+        records = [
+            SpreadsheetRowRecord(
+                section=row.section,
+                row=row.row,
+                position=row.position,
+            )
+            for row in req.rows
+        ]
+        sections = compress_section_rows(records)
+    except ValueError as error:
+        raise _bad_request(error) from error
+    return RowImportResponse(sections=sections)
+
+
+@router.post(
+    "/agent/analyze",
+    response_model=MapiAgentResp,
+    summary="Analyze a row progression with the Mapi agent",
+    description=(
+        "Runs the Pydantic AI-backed Mapi agent against a compact section code. "
+        "The default local agent requires no external model key and returns "
+        "parser-grounded mapping, Redis, and review-workflow guidance."
+    ),
+)
+async def analyze_with_agent(req: MapiAgentRequest) -> MapiAgentResp:
+    try:
+        return await run_mapi_agent(req)
+    except ValueError as error:
+        raise _bad_request(error) from error

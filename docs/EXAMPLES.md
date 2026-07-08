@@ -140,3 +140,41 @@ Response excerpt:
   "segment_count": 2
 }
 ```
+
+## Agent Analysis
+
+The Mapi agent is backed by Pydantic AI. By default it uses a local function
+model, so this works without an external API key.
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/row-progression/agent/analyze \
+  -H 'content-type: application/json' \
+  -d '{
+    "venue_id": "demo-arena",
+    "section_id": "101",
+    "code": "AA:CC,1=1W",
+    "question": "What should a broker review?"
+  }'
+```
+
+Response excerpt:
+
+```json
+{
+  "analysis": {
+    "friendly_name": "Mapi is a friendly name for a mapping API...",
+    "parser_confidence": "valid",
+    "review_triggers": [
+      "Equivalent row alias detected; verify shared-position rows.",
+      "Range expansion used; validate start/end row family semantics."
+    ],
+    "redis": {
+      "string_key": "venue:demo-arena:section:101:row_progression",
+      "hash_key": "venue:demo-arena:section:101",
+      "json_key": "venue:demo-arena:section:101:expanded",
+      "index_document_key": "venue:demo-arena:section:101:index"
+    }
+  },
+  "agent_model": "function:mapi-local"
+}
+```

@@ -1,0 +1,59 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Mapi venue mapping API preview</title>
+  <desc id="desc">A venue grid, compact DSL, API flow, and review signal for Mapi.</desc>
+  <rect width="1200" height="630" rx="32" fill="#0F172A"/>
+  <rect x="54" y="54" width="1092" height="522" rx="28" fill="#111827" stroke="#334155" stroke-width="2"/>
+
+  <text x="94" y="135" fill="#F8FAFC" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="800">Mapi</text>
+  <text x="96" y="178" fill="#CBD5E1" font-family="Inter, Arial, sans-serif" font-size="28">Venue Row Maps -> Typed Infrastructure</text>
+
+  <g transform="translate(94 235)">
+    <rect width="320" height="250" rx="18" fill="#1E293B" stroke="#475569"/>
+    <text x="24" y="42" fill="#E2E8F0" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">Spreadsheet rows</text>
+    <g fill="#38BDF8">
+      <rect x="26" y="75" width="54" height="32" rx="6"/>
+      <rect x="88" y="75" width="54" height="32" rx="6"/>
+      <rect x="150" y="75" width="54" height="32" rx="6"/>
+      <rect x="212" y="75" width="54" height="32" rx="6"/>
+    </g>
+    <g fill="#0EA5E9">
+      <rect x="26" y="118" width="54" height="32" rx="6"/>
+      <rect x="88" y="118" width="54" height="32" rx="6"/>
+      <rect x="150" y="118" width="54" height="32" rx="6"/>
+    </g>
+    <g fill="#64748B">
+      <rect x="26" y="161" width="54" height="32" rx="6"/>
+      <rect x="88" y="161" width="54" height="32" rx="6"/>
+      <rect x="150" y="161" width="54" height="32" rx="6"/>
+      <rect x="212" y="161" width="54" height="32" rx="6"/>
+    </g>
+    <text x="24" y="225" fill="#94A3B8" font-family="Inter, Arial, sans-serif" font-size="18">section,row,position</text>
+  </g>
+
+  <path d="M438 360H540" stroke="#22C55E" stroke-width="8" stroke-linecap="round"/>
+  <path d="M520 334L548 360L520 386" stroke="#22C55E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g transform="translate(570 235)">
+    <rect width="260" height="250" rx="18" fill="#172554" stroke="#2563EB"/>
+    <text x="24" y="42" fill="#DBEAFE" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700">Compact DSL</text>
+    <rect x="24" y="78" width="212" height="46" rx="10" fill="#1D4ED8"/>
+    <text x="40" y="108" fill="#EFF6FF" font-family="Menlo, Consolas, monospace" font-size="18">AA:DD,A:C</text>
+    <rect x="24" y="138" width="212" height="46" rx="10" fill="#1D4ED8"/>
+    <text x="40" y="168" fill="#EFF6FF" font-family="Menlo, Consolas, monospace" font-size="18">8:19!</text>
+    <rect x="24" y="198" width="212" height="34" rx="10" fill="#1D4ED8"/>
+    <text x="40" y="221" fill="#EFF6FF" font-family="Menlo, Consolas, monospace" font-size="18">13=13W</text>
+  </g>
+
+  <path d="M854 360H956" stroke="#22C55E" stroke-width="8" stroke-linecap="round"/>
+  <path d="M936 334L964 360L936 386" stroke="#22C55E" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <g transform="translate(982 235)">
+    <rect width="124" height="250" rx="18" fill="#14532D" stroke="#22C55E"/>
+    <circle cx="62" cy="72" r="28" fill="#22C55E"/>
+    <path d="M49 72L58 82L78 58" stroke="#052E16" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="26" y="130" fill="#DCFCE7" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700">API</text>
+    <text x="22" y="164" fill="#BBF7D0" font-family="Inter, Arial, sans-serif" font-size="16">Redis</text>
+    <text x="22" y="192" fill="#BBF7D0" font-family="Inter, Arial, sans-serif" font-size="16">Diffs</text>
+    <text x="22" y="220" fill="#BBF7D0" font-family="Inter, Arial, sans-serif" font-size="16">Agent</text>
+  </g>
+</svg>

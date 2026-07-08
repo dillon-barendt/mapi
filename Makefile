@@ -1,19 +1,21 @@
+PYTHON ?= .venv/bin/python
+
 install:
-	python -m pip install --upgrade pip
-	python -m pip install -e ".[dev]"
+	$(PYTHON) -m pip install --upgrade pip
+	$(PYTHON) -m pip install -e ".[dev]"
 
 dev:
-	uvicorn app.main:app --reload
+	$(PYTHON) -m uvicorn app.main:app --reload
 
 test:
-	pytest --cov=app --cov-report=term-missing
+	$(PYTHON) -m pytest --cov=app --cov-report=term-missing
 
 quality:
-	black --check .
-	isort --check-only .
-	ruff check .
-	mypy app
-	pytest --cov=app --cov-report=term-missing
+	$(PYTHON) -m black --check .
+	$(PYTHON) -m isort --check-only .
+	$(PYTHON) -m ruff check .
+	$(PYTHON) -m mypy app
+	$(PYTHON) -m pytest --cov=app --cov-report=term-missing
 
 demo-cli:
-	python -m app.cli import-csv examples/csv/demo_venue_rows.csv
+	$(PYTHON) -m app.cli import-csv examples/csv/demo_venue_rows.csv

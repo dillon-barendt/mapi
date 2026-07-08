@@ -1,7 +1,7 @@
 from functools import lru_cache
 from typing import Any
 
-from pydantic import Field
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .constants import (
@@ -29,6 +29,7 @@ class Settings(BaseSettings):
         case_sensitive=False,
         extra="ignore",
         use_enum_values=True,
+        populate_by_name=True,
     )
 
     app_name: str = APP_NAME
@@ -49,6 +50,32 @@ class Settings(BaseSettings):
         description="Allowed CORS HTTP methods.",
     )
     row_progression_tag: str = "Row Progression"
+    ticketmaster_discovery_tag: str = "Ticketmaster Discovery"
+    ticketmaster_maps_tag: str = "Ticketmaster Maps"
+    ticketmaster_enrichment_tag: str = "Ticketmaster Enrichment"
+
+    ticketmaster_api_key: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices(
+            "TICKETMASTER_API_KEY",
+            "APP_TICKETMASTER_API_KEY",
+        ),
+        description="Ticketmaster Discovery Feed API key. Never commit this value.",
+    )
+    ticketmaster_discovery_base_url: str = (
+        "https://app.ticketmaster.com/discovery-feed/v2"
+    )
+    ticketmaster_discovery_default_country_code: str = "US"
+    ticketmaster_discovery_timeout_seconds: float = 30.0
+    ticketmaster_discovery_enabled: bool = True
+
+    ticketmaster_maps_base_url: str = "https://mapsapi.tmol.io"
+    ticketmaster_maps_geometry_version: int = 3
+    ticketmaster_maps_system_id: str = "HOST"
+    ticketmaster_maps_referer: str = "https://cims.ticketmaster.com/"
+    ticketmaster_maps_user_agent: str | None = None
+    ticketmaster_maps_timeout_seconds: float = 15.0
+    ticketmaster_maps_enabled: bool = True
 
     @property
     def build_fastapi_kwargs(self) -> dict[str, Any]:

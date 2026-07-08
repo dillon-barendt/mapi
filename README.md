@@ -13,12 +13,12 @@ Mapi is a FastAPI/Python case study for a ticketing infrastructure problem:
 turning spreadsheet-shaped venue section-row maps into compact, validated,
 diffable, cacheable infrastructure values.
 
+The name is intentional: Mapi is a friendly name for a mapping API. It maps
+venue maps, maps compact DSL values into normalized infrastructure values, and
+exposes those mappings through an API.
+
 The examples in this repository are synthetic. The project is intended as a
 public engineering portfolio artifact, not a claim of production deployment.
-
-Mapi is a friendly name for a mapping API: it maps venue maps, maps compact DSL
-values into normalized infrastructure values, and exposes those mappings through
-an API.
 
 ## What Mapi Solves
 
@@ -212,6 +212,7 @@ Key files:
 - `app/agents/mapi.py`: Pydantic AI agent wrapper for mapping analysis.
 - `app/api/v1/endpoints/progression.py`: versioned FastAPI endpoints.
 - `docs/ARCHITECTURE.md`: architecture notes and parser flow.
+- `app/schemas/*.py`: Pydantic request and response models.
 
 ## Testing Strategy
 

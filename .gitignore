@@ -1,4 +1,9 @@
 .venv/
+.idea/
+.vscode/
+.DS_Store
+*.iml
+.env
 __pycache__/
 *.py[cod]
 *.egg-info/

@@ -4,6 +4,10 @@ Mapi is a FastAPI/Python case study for a ticketing infrastructure problem:
 representing venue section-row maps as compact atomic progression strings that
 can be parsed, validated, diffed, compressed, cached, and indexed.
 
+The name is intentional: Mapi is a friendly name for a mapping API. It maps
+venue maps, maps compact DSL values into normalized infrastructure values, and
+exposes those mappings through an API.
+
 The examples in this repository are synthetic. The project is intended as a
 public engineering portfolio artifact, not a claim of production deployment.
 
@@ -85,6 +89,28 @@ Response:
 All domain endpoints live under `/api/v1/row-progression`. OpenAPI docs are
 available at `/docs` when the app is running.
 
+## Pydantic AI Agent
+
+Mapi includes a keyless Pydantic AI agent endpoint for explaining what a compact
+row progression means and how it should flow through Redis and review systems.
+The default model is a local `FunctionModel`, so tests and demos do not require
+external credentials.
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/row-progression/agent/analyze \
+  -H 'content-type: application/json' \
+  -d '{
+    "venue_id": "demo-arena",
+    "section_id": "101",
+    "code": "AA:DD,A:C,1:12,13=13W",
+    "question": "What should a broker review before publishing?"
+  }'
+```
+
+The response includes parser-grounded rows and stats, a friendly explanation of
+the Mapi name, Redis key suggestions, review triggers, and recommended next
+actions.
+
 ## Redis Usage
 
 The compact code can be stored as a Redis string:
@@ -137,6 +163,7 @@ Key files:
 
 - `app/schemas/validators.py`: parser, compressor, stats, venue build, venue
   diff
+- `app/agents/mapi.py`: Pydantic AI agent wrapper for mapping analysis
 - `app/schemas/*.py`: Pydantic request and response models
 - `app/api/v1/endpoints/progression.py`: versioned FastAPI endpoints
 - `docs/ARCHITECTURE.md`: architecture notes and parser flow
@@ -152,6 +179,7 @@ The suite covers:
 - Gap rows with `!`
 - Duplicate row detection
 - `parse -> compress -> parse` round trips
+- Pydantic AI agent analysis without external model credentials
 - API response contracts
 
 Run:
@@ -180,10 +208,11 @@ uvicorn app.main:app --reload
 ## Recruiter-Facing Summary
 
 Mapi demonstrates domain modeling, parser correctness, typed FastAPI contracts,
-property-based testing, and cache/index design around a real class of ticketing
-data problem. The value is not the number of endpoints; it is that compact venue
-DSL strings become deterministic, validated infrastructure objects that can
-drive search, diffing, and human-in-the-loop review workflows.
+property-based testing, Pydantic AI agent integration, and cache/index design
+around a real class of ticketing data problem. The value is not the number of
+endpoints; it is that compact venue DSL strings become deterministic, validated
+infrastructure objects that can drive search, diffing, and human-in-the-loop
+review workflows.
 
 ## More Documentation
 

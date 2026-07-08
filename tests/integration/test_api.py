@@ -87,3 +87,29 @@ def test_invalid_code_returns_400() -> None:
 
     assert response.status_code == 400
     assert "Ranges require matching" in response.json()["detail"]
+
+
+def test_agent_endpoint_returns_mapping_guidance() -> None:
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/v1/row-progression/agent/analyze",
+            json={
+                "venue_id": "demo-arena",
+                "section_id": "101",
+                "code": "AA:CC,1=1W",
+                "question": "What should a broker review?",
+            },
+        )
+
+    payload = response.json()
+
+    assert response.status_code == 200
+    assert payload["agent_model"] == "function:mapi-local"
+    assert "mapping API" in payload["analysis"]["friendly_name"]
+    assert payload["analysis"]["redis"]["hash_key"] == "venue:demo-arena:section:101"
+    assert payload["stats"]["total_rows"] == 5
+    assert payload["stats"]["unique_position_count"] == 4
+    assert any(
+        "Equivalent row alias" in trigger
+        for trigger in payload["analysis"]["review_triggers"]
+    )

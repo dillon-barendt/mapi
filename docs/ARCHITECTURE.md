@@ -5,16 +5,21 @@ large service framework. FastAPI exposes the parser through versioned endpoints,
 Pydantic models define request and response contracts, and pure Python helpers
 keep parse/compress/diff behavior testable without an ASGI server.
 
+Mapi also includes a Pydantic AI agent layer. The agent interprets a compact row
+progression as a mapping value: the same string can represent a venue map, a
+normalized infrastructure value, and an API payload.
+
 ```mermaid
 flowchart LR
     A["Input venue DSL<br/>AA:DD,A:C,1:12,13=13W"]
     B["Parser<br/>validate segments and expand ranges"]
     C["Typed row model<br/>RowOut(name, position)"]
     D["API response<br/>/api/v1/row-progression/parse"]
-    E["Redis/query layer<br/>string, hash, JSON, search index"]
-    F["Agent workflow<br/>diff review and inventory checks"]
+    E["Pydantic AI agent<br/>mapping analysis and review triggers"]
+    F["Redis/query layer<br/>string, hash, JSON, search index"]
+    G["Agent workflow<br/>diff review and inventory checks"]
 
-    A --> B --> C --> D --> E --> F
+    A --> B --> C --> D --> E --> F --> G
 ```
 
 ## Runtime Modules
@@ -22,6 +27,7 @@ flowchart LR
 | Module | Responsibility |
 | --- | --- |
 | `app/schemas/validators.py` | Parse, compress, inspect, build, and diff row progression codes. |
+| `app/agents/mapi.py` | Pydantic AI agent that explains mapping value, Redis keys, and review triggers. |
 | `app/schemas/*.py` | Pydantic request and response models for API contracts. |
 | `app/api/v1/endpoints/progression.py` | Versioned FastAPI endpoints under `/api/v1/row-progression`. |
 | `app/main.py` | FastAPI app construction, middleware, and health/cache endpoints. |
@@ -39,6 +45,7 @@ All domain endpoints are versioned under `/api/v1/row-progression`.
 | `POST` | `/stats` | Return row counts, unique positions, entropy, and segment count. |
 | `POST` | `/build-venue` | Expand a venue made of compact section definitions. |
 | `POST` | `/venue-diff` | Compare compact venue maps by section and row position. |
+| `POST` | `/agent/analyze` | Run the Mapi Pydantic AI agent on one compact section code. |
 
 ## Parser Flow
 
@@ -79,3 +86,16 @@ FastAPI keeps the project easy to inspect:
 - The parser remains framework-independent and property-testable.
 - The API can be embedded behind other marketplace, broker, or data-quality
   systems without changing the DSL.
+
+## Why Pydantic AI
+
+The Pydantic AI agent gives the project an explicit agent workflow without
+making tests depend on a live model provider. The default model is a local
+`FunctionModel` that returns deterministic, parser-grounded analysis.
+
+This keeps the agent honest:
+
+- Parser output remains the evidence source.
+- The agent explains mapping value, Redis key shape, and review triggers.
+- External model credentials are not required for local development or CI.
+- A future real model can use the same typed request/response contract.

@@ -1,0 +1,3 @@
+eventId,legacyEventId,eventName,eventStatus,eventStartDateTime,eventStartLocalDate,eventStartLocalTime,venueName,venueId,venueCity,venueStateCode,venueCountryCode,officialSeller,transactable,classificationSegment,classificationGenre
+vvG1YZ9DemoA,3B00633EA89923F8,Demo Arena Basketball,onsale,2026-07-08T02:00:00Z,2026-07-07,19:00:00,Demo Arena,KovZpZA6taIA,Phoenix,AZ,US,true,true,Sports,Basketball
+vvG1YZ9DemoB,1A00222BBBBCCCCD,Demo Arena Concert,offsale,2026-08-10T03:30:00Z,2026-08-09,,Demo Arena,,Phoenix,AZ,US,false,false,Music,Rock

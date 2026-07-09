@@ -4,6 +4,21 @@ Mapi is a portfolio-ready case study, not a production deployment claim. These
 are realistic next steps for turning the architecture into an operational
 system.
 
+## Ticketmaster Provider Enrichment
+
+- Ticketmaster Discovery Feed daily ingestion.
+- Feed metadata checksum and timestamp tracking.
+- Event-to-map matching through `legacyEventId`.
+- Venue metadata enrichment from provider records.
+- Section/place normalization from `placeDetail` payloads.
+- Seat/row geometry enrichment once stable fixtures exist.
+- Broker review triggers for missing maps, aliases, gaps, and geometry drift.
+- Redis cache invalidation when feed or map metadata changes.
+- Diffing provider metadata over time.
+- Agent-assisted anomaly review.
+- Background queue processing for large country feeds.
+- Rate-limited provider fetches with retry and resume support.
+
 ## Spreadsheet Ingestion
 
 - Accept authenticated uploads.

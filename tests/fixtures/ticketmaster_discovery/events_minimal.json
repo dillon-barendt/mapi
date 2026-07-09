@@ -1,0 +1,44 @@
+[
+  {
+    "eventId": "vvG1YZ9DemoA",
+    "legacyEventId": "3B00633EA89923F8",
+    "eventName": "Demo Arena Basketball",
+    "eventStatus": "onsale",
+    "eventStartDateTime": "2026-07-08T02:00:00Z",
+    "eventStartLocalDate": "2026-07-07",
+    "eventStartLocalTime": "19:00:00",
+    "source": "ticketmaster",
+    "brandName": "Ticketmaster",
+    "officialSeller": true,
+    "classificationSegment": "Sports",
+    "classificationGenre": "Basketball",
+    "classificationSubGenre": "NBA",
+    "venue": {
+      "venueName": "Demo Arena",
+      "venueId": "KovZpZA6taIA",
+      "legacyVenueId": "12345",
+      "venueTimezone": "America/Phoenix",
+      "venueCity": "Phoenix",
+      "venueStateCode": "AZ",
+      "venueCountryCode": "US",
+      "venueZipCode": "85004",
+      "venueLatitude": 33.4457,
+      "venueLongitude": -112.0712
+    }
+  },
+  {
+    "eventId": "vvG1YZ9DemoB",
+    "legacyEventId": "1A00222BBBBCCCCD",
+    "eventName": "Demo Arena Concert",
+    "eventStatus": "offsale",
+    "eventStartDateTime": "2026-08-10T03:30:00Z",
+    "eventStartLocalDate": "2026-08-09",
+    "source": "ticketmaster",
+    "transactable": false,
+    "venue": {
+      "venueName": "Demo Arena",
+      "venueCity": "Phoenix",
+      "venueCountryCode": "US"
+    }
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "eventName": "Demo Arena Basketball",
+  "venueName": "Demo Arena",
+  "sections": [
+    {"id": "101", "name": "101"},
+    {"id": "102", "name": "102"}
+  ],
+  "places": [
+    {"id": "101-A-1", "section": "101", "row": "A"},
+    {"id": "101-A-2", "section": "101", "row": "A"},
+    {"id": "102-B-1", "section": "102", "row": "B"}
+  ],
+  "metadata": {
+    "fixture": true
+  }
+}

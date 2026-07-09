@@ -170,6 +170,21 @@ The response includes parser-grounded rows and stats, a friendly explanation of
 the Mapi name, Redis key suggestions, review triggers, and recommended next
 actions.
 
+## Ticketmaster Discovery + Maps Enrichment
+
+Mapi can optionally ingest Ticketmaster Discovery Feed 2.0 event metadata,
+extract `legacyEventId` values, and use those IDs to request
+Ticketmaster-served place-detail metadata. This extends Mapi beyond manually
+maintained spreadsheet-shaped row maps into provider-backed venue-map
+enrichment.
+
+The integration is provider-backed, fixture-tested, and documented as a
+production extension path. Secrets are read from environment settings and are
+never committed.
+
+Mapi demonstrates how broker-created spreadsheet maps and provider-served
+event/venue metadata can be normalized behind the same typed API boundary.
+
 ## Redis Usage
 
 The compact code can be stored as a Redis string:
@@ -285,6 +300,9 @@ python fastapi pydantic-v2 ticketing domain-modeling dsl parser redis portfolio-
 - [docs/BROKER_WORKFLOW.md](docs/BROKER_WORKFLOW.md)
 - [docs/DEMO.md](docs/DEMO.md)
 - [docs/PRODUCTION_EXTENSIONS.md](docs/PRODUCTION_EXTENSIONS.md)
+- [docs/TICKETMASTER_DISCOVERY_FEED.md](docs/TICKETMASTER_DISCOVERY_FEED.md)
+- [docs/TICKETMASTER_MAPS.md](docs/TICKETMASTER_MAPS.md)
+- [docs/TICKETMASTER_ENRICHMENT_PIPELINE.md](docs/TICKETMASTER_ENRICHMENT_PIPELINE.md)
 - [docs/DOMAIN.md](docs/DOMAIN.md)
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - [docs/REDIS_MODEL.md](docs/REDIS_MODEL.md)

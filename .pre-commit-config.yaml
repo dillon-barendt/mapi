@@ -1,0 +1,138 @@
+# Mapi-Suite Pre-commit Configuration
+# See https://pre-commit.com for more information
+
+repos:
+  # Ruff - Python linting and formatting (replaces black, isort, flake8, etc.)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.13.0
+    hooks:
+      # Linter
+      - id: ruff-check
+        name: ruff-check
+        description: "Run Ruff linter"
+        args: [ --fix, --exit-non-zero-on-fix ]
+        types: [ python ]
+      # Formatter
+      - id: ruff-format
+        name: ruff-format
+        description: "Run Ruff formatter"
+        types: [ python ]
+
+  # Type checking (fast)
+  - repo: local
+    hooks:
+      - id: ty
+        name: ty-check
+        description: "Run ty type checker"
+        entry: uv run ty check
+        files: ^src/brokervision/.*\.py$
+        language: system
+        types: [ python ]
+
+  # Type checking (deep)
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.10.0
+    hooks:
+      - id: mypy
+        name: mypy-check
+        description: "Run mypy type checker"
+        additional_dependencies: [ ]
+        args: [ --config-file=mypy.ini ]
+        types: [ python ]
+
+  # Built-in hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      # General file checks
+      - id: trailing-whitespace
+        name: trim-whitespace
+        description: "Trim trailing whitespace"
+        args: [ --markdown-linebreak-ext=md ]
+      - id: end-of-file-fixer
+        name: fix-end-of-files
+        description: "Ensure files end with a newline"
+      - id: check-merge-conflict
+        name: check-merge-conflicts
+        description: "Check for merge conflict markers"
+      - id: check-case-conflict
+        name: check-case-conflicts
+        description: "Check for case conflicts in filenames"
+
+      # YAML/JSON validation
+      - id: check-yaml
+        name: check-yaml
+        description: "Validate YAML files"
+        args: [ --allow-multiple-documents ]
+        exclude: ^deploy/k8s/templates/.*\.yaml$
+      - id: check-json
+        name: check-json
+        description: "Validate JSON files"
+      - id: check-toml
+        name: check-toml
+        description: "Validate TOML files"
+
+      # Python-specific
+      - id: check-ast
+        name: check-python-ast
+        description: "Check Python AST syntax"
+      - id: check-builtin-literals
+        name: check-builtin-literals
+        description: "Check for builtin literals"
+      - id: check-docstring-first
+        name: check-docstring-first
+        description: "Check docstring is first in Python files"
+      - id: debug-statements
+        name: check-debug-statements
+        description: "Check for debugger imports and breakpoints"
+
+      # Security
+      - id: detect-private-key
+        name: detect-private-keys
+        description: "Check for private keys"
+
+  # Conventional Commits
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.2.0
+    hooks:
+      - id: conventional-pre-commit
+        name: conventional-commits
+        description: "Ensure commit messages follow conventional commit format"
+        stages: [ commit-msg ]
+
+  # YAML formatting
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v3.1.0
+    hooks:
+      - id: prettier
+        name: prettier
+        description: "Format YAML, JSON, and Markdown files"
+        files: \.(ya?ml|json|md)$
+        args: [ --write, --log-level=warn ]
+        additional_dependencies:
+          - prettier@3.6.2
+
+# Configuration
+default_stages: [ pre-commit ]
+fail_fast: false
+
+# Exclude patterns
+exclude: |
+  (?x)^(
+    .*\.min\.(js|css)$ |
+    .*\.bundle\.(js|css)$ |
+    node_modules/ |
+    \.venv/ |
+    venv/ |
+    build/ |
+    dist/ |
+    \.git/ |
+    \.cache/ |
+    site/ |
+    \.pytest_cache/ |
+    \.mypy_cache/ |
+    \.ruff_cache/ |
+    __pycache__/ |
+    playwright-report/ |
+    test-results/ |
+  )$

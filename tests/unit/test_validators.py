@@ -2,9 +2,9 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from app.schemas.row import RowOut
-from app.schemas.validators import compress_rows, get_stats, parse_code, venue_diff
-from app.schemas.venue import Venue
+from mapi.schemas.row import RowOut
+from mapi.schemas.validators import compress_rows, get_stats, parse_code, venue_diff
+from mapi.schemas.venue import Venue
 
 
 def row_pairs(code: str) -> list[tuple[str, int]]:
@@ -177,8 +177,10 @@ row_name_strategy = st.one_of(
         min_size=1,
         max_size=8,
     ).filter(
-        lambda groups: len([name for names, _ in groups for name in names])
-        == len({name for names, _ in groups for name in names})
+        lambda groups: (
+            len([name for names, _ in groups for name in names])
+            == len({name for names, _ in groups for name in names})
+        )
     )
 )
 def test_generated_rows_round_trip_through_compression(

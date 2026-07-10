@@ -7,15 +7,15 @@ from pydantic_ai import Agent
 from pydantic_ai.messages import ModelResponse, TextPart
 from pydantic_ai.models.function import FunctionModel
 
-from app.schemas import validators as row_progression
-from app.schemas.agent import (
+from mapi.schemas import validators as row_progression
+from mapi.schemas.agent import (
     MapiAgentAnalysis,
     MapiAgentRequest,
     MapiAgentResp,
     RedisMappingSuggestion,
 )
-from app.schemas.code import StatsResp
-from app.schemas.row import RowOut
+from mapi.schemas.code import StatsResp
+from mapi.schemas.row import RowOut
 
 MAPI_AGENT_INSTRUCTIONS = """
 You are Mapi, a venue mapping agent.

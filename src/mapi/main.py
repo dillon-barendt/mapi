@@ -1,16 +1,17 @@
 """Application entry point for the Mapi FastAPI service."""
 
-from typing import Any
+from typing import Any, cast
 
 from fastapi import FastAPI, status
 from fastapi.requests import Request
+
+from mapi.core.openapi_custom import custom_openapi
 
 from .api.v1.router import api_v1_router
 from .core.config import settings
 from .core.constants import APP_HEALTH_MESSAGE
 from .core.middleware import ResponseTimeMiddleware
 from .core.state import lifespan
-from .utils.openapi_custom import custom_openapi
 
 app = FastAPI(**settings.build_fastapi_kwargs, lifespan=lifespan)
 app.add_middleware(ResponseTimeMiddleware)
@@ -18,7 +19,7 @@ app.include_router(api_v1_router)
 
 
 def openapi() -> dict[str, Any]:
-    return custom_openapi(fastapi_app=app)
+    return cast("dict[str, Any]", custom_openapi(fastapi_app=app))
 
 
 app.openapi = openapi  # type: ignore[method-assign]

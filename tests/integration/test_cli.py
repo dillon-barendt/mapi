@@ -8,7 +8,7 @@ def test_import_csv_cli_outputs_compact_json() -> None:
         [
             sys.executable,
             "-m",
-            "app.cli",
+            "mapi.cli",
             "import-csv",
             "examples/csv/demo_venue_rows.csv",
         ],
@@ -28,7 +28,7 @@ def test_import_csv_cli_outputs_compact_json() -> None:
 
 def test_import_csv_cli_returns_nonzero_for_missing_file() -> None:
     result = subprocess.run(
-        [sys.executable, "-m", "app.cli", "import-csv", "missing.csv"],
+        [sys.executable, "-m", "mapi.cli", "import-csv", "missing.csv"],
         check=False,
         capture_output=True,
         text=True,

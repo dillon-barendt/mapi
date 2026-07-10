@@ -1,21 +1,19 @@
 PYTHON ?= .venv/bin/python
 
 install:
-	$(PYTHON) -m pip install --upgrade pip
-	$(PYTHON) -m pip install -e ".[dev]"
+	uv sync --all-groups
 
 dev:
-	$(PYTHON) -m uvicorn app.main:app --reload
+	uv run fastapi dev src/mapi/main.py
 
 test:
-	$(PYTHON) -m pytest --cov=app --cov-report=term-missing
+	uv run pytest --cov=mapi --cov-report=term-missing
 
 quality:
-	$(PYTHON) -m black --check .
-	$(PYTHON) -m isort --check-only .
-	$(PYTHON) -m ruff check .
-	$(PYTHON) -m mypy app
-	$(PYTHON) -m pytest --cov=app --cov-report=term-missing
+	uv run ruff format . --check
+	uv run ruff check --fix --unsafe-fixes
+	uv run mypy src tools
+	uv run pytest --cov=mapi --cov-report=term-missing
 
 demo-cli:
-	$(PYTHON) -m app.cli import-csv examples/csv/demo_venue_rows.csv
+	uv run python -m mapi.cli import-csv examples/csv/demo_venue_rows.csv

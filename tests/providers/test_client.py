@@ -3,11 +3,8 @@ from __future__ import annotations
 import httpx
 import pytest
 
-from app.core.config import Settings
-from app.providers.ticketmaster_maps import (
-    TicketmasterMapsClient,
-    TicketmasterMapsProviderError,
-)
+from mapi.core.config import Settings
+from mapi.providers.ticketmaster_maps import TicketmasterMapsClient, TicketmasterMapsProviderError
 
 
 @pytest.mark.anyio

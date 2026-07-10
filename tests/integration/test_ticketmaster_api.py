@@ -5,23 +5,23 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from app.api.deps import (
+from mapi.api.deps import (
     get_ticketmaster_discovery_service,
     get_ticketmaster_enrichment_service,
     get_ticketmaster_maps_service,
 )
-from app.main import app
-from app.providers.ticketmaster_discovery import (
+from mapi.main import app
+from mapi.providers.ticketmaster_discovery import (
     TicketmasterDiscoveryProviderError,
     parse_discovery_json_events,
 )
-from app.providers.ticketmaster_maps import (
+from mapi.providers.ticketmaster_maps import (
     TicketmasterMapsProviderError,
     summarize_place_detail_payload,
 )
-from app.services.ticketmaster_enrichment import TicketmasterEnrichmentService
+from mapi.services.ticketmaster_enrichment import TicketmasterEnrichmentService
 
-DISCOVERY_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster_discovery"
+DISCOVERY_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster"
 MAPS_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster_maps"
 
 
@@ -117,8 +117,8 @@ def test_ticketmaster_maps_place_detail_route_returns_summary() -> None:
 
 
 def test_ticketmaster_enrichment_specific_event_route_returns_summary() -> None:
-    app.dependency_overrides[get_ticketmaster_enrichment_service] = (
-        lambda: TicketmasterEnrichmentService(
+    app.dependency_overrides[get_ticketmaster_enrichment_service] = lambda: (
+        TicketmasterEnrichmentService(
             discovery_service=FakeDiscoveryService(),  # type: ignore[arg-type]
             maps_service=FakeMapsService(),  # type: ignore[arg-type]
         )
@@ -126,7 +126,7 @@ def test_ticketmaster_enrichment_specific_event_route_returns_summary() -> None:
     try:
         with TestClient(app) as client:
             response = client.get(
-                "/api/v1/ticketmaster-enrichment/events/" "3B00633EA89923F8/map-summary"
+                "/api/v1/ticketmaster-enrichment/events/3B00633EA89923F8/map-summary"
             )
     finally:
         _clear_overrides()
@@ -136,8 +136,8 @@ def test_ticketmaster_enrichment_specific_event_route_returns_summary() -> None:
 
 
 def test_ticketmaster_enrichment_sample_route_returns_combined_summary() -> None:
-    app.dependency_overrides[get_ticketmaster_enrichment_service] = (
-        lambda: TicketmasterEnrichmentService(
+    app.dependency_overrides[get_ticketmaster_enrichment_service] = lambda: (
+        TicketmasterEnrichmentService(
             discovery_service=FakeDiscoveryService(),  # type: ignore[arg-type]
             maps_service=FakeMapsService(),  # type: ignore[arg-type]
         )

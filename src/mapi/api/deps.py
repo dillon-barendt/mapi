@@ -1,6 +1,6 @@
-from app.providers.ticketmaster_discovery import TicketmasterDiscoveryService
-from app.providers.ticketmaster_maps import TicketmasterMapsService
-from app.services.ticketmaster_enrichment import TicketmasterEnrichmentService
+from mapi.providers.ticketmaster_discovery import TicketmasterDiscoveryService
+from mapi.providers.ticketmaster_maps import TicketmasterMapsService
+from mapi.services.ticketmaster_enrichment import TicketmasterEnrichmentService
 
 
 def get_ticketmaster_discovery_service() -> TicketmasterDiscoveryService:

@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/dillon-barendt/mapi/discussions
+    about: Ask questions, share ideas, and discuss BrokerVision with the team
+
+  - name: Documentation
+    url: https://dillon-barendt.github.io/mapi/
+    about: Read the project documentation, guides, and API references
+
+  - name: Security Vulnerability
+    url: https://github.com/dillon-barendt/brokervision/security/advisories/new
+    about: Report a security vulnerability privately (for critical security issues)
+
+  - name: Feature Roadmap
+    url: https://github.com/dillon-barendt/mapi/projects
+    about: View the project roadmap and planned features

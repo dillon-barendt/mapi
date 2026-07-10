@@ -1,0 +1,148 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for Mapi
+title: "[Feature]: "
+labels: [ "type: feature", "status: needs-triage" ]
+assignees: [ ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please fill out this form to help us understand your request.
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: A clear and concise description of the feature you'd like to see.
+      placeholder: Describe the feature you want...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve? What's the use case?
+      placeholder: |
+        As a [user type], I want [goal] so that [benefit].
+
+        Current situation:
+        - What's the current workflow?
+        - What's frustrating or inefficient?
+        - What's missing?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: Describe your preferred solution in detail.
+      placeholder: |
+        How should this work?
+        - User interaction flow
+        - Technical approach (if known)
+        - Integration points
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: What alternative solutions have you considered?
+      placeholder: |
+        - Alternative approach 1
+        - Alternative approach 2
+        - Why the proposed solution is better
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which component should implement this feature?
+      options:
+        - API endpoints
+        - Application services
+        - Domain models
+        - Provider integration
+        - Infrastructure/runtime
+        - Core configuration
+        - Workflows/automation
+        - Documentation
+        - CI/CD and releases
+        - New Component
+        - Multiple Components
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature?
+      options:
+        - Low - Nice to have, not urgent
+        - Medium - Would improve workflow significantly
+        - High - Important for business goals
+        - Critical - Blocking major functionality
+    validations:
+      required: true
+
+  - type: dropdown
+    id: effort
+    attributes:
+      label: Estimated Effort
+      description: How complex do you think this feature is?
+      options:
+        - XS - Few hours (small change)
+        - S - Half day (simple feature)
+        - M - 1-2 days (medium feature)
+        - L - 3-5 days (complex feature)
+        - XL - 1+ weeks (major feature)
+        - Unknown - Need technical analysis
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: What needs to be true for this feature to be considered complete?
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+        - [ ] Tests are written and passing
+        - [ ] Documentation is updated
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: Mockups/Examples
+      description: Any mockups, screenshots, or examples to illustrate the feature?
+      placeholder: Paste images or links here...
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context, links, or information about the feature request.
+      placeholder: |
+        - Related issues or PRs
+        - External references
+        - Business context
+        - Timeline considerations
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to ensure this is not a duplicate
+          required: true
+        - label: I have provided a clear problem statement and proposed solution
+          required: true
+        - label: I am willing to help implement this feature
+          required: false
+        - label: I am available to provide feedback during development
+          required: false

@@ -1,0 +1,143 @@
+name: Documentation Issue
+description: Report missing, unclear, or incorrect documentation
+title: "[Docs]: "
+labels: [ "type: docs", "status: needs-triage" ]
+assignees: [ ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve our documentation! Clear docs are essential for a great developer experience.
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation issue is this?
+      options:
+        - Missing Documentation - Something isn't documented at all
+        - Unclear Documentation - Existing docs are confusing
+        - Incorrect Documentation - Docs contain wrong information
+        - Outdated Documentation - Docs are out of sync with code
+        - Documentation Enhancement - Improve existing docs
+        - New Documentation - Request for new docs section
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue-description
+    attributes:
+      label: Issue Description
+      description: Describe the documentation issue in detail.
+      placeholder: |
+        What's wrong with the current documentation?
+        What information is missing or unclear?
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Location
+      description: Where is this documentation issue located?
+      placeholder: |
+        - File path: docs/...
+        - URL: https://...
+        - Section: ...
+        - Function/Class: ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which component does this documentation relate to?
+      options:
+        - Getting Started
+        - API endpoints
+        - Application services
+        - Domain models
+        - Provider integration
+        - Infrastructure/runtime
+        - Core configuration
+        - Workflows/automation
+        - Git Workflow
+        - Deployment
+        - Architecture
+        - API Reference
+        - Runbooks
+        - Contributing Guide
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-content
+    attributes:
+      label: Current Content
+      description: What does the current documentation say? (if applicable)
+      placeholder: Copy the current documentation content here...
+
+  - type: textarea
+    id: suggested-improvement
+    attributes:
+      label: Suggested Improvement
+      description: How should the documentation be improved?
+      placeholder: |
+        What should the documentation say instead?
+        What information should be added?
+        How can it be made clearer?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Target Audience
+      description: Who is the primary audience for this documentation?
+      options:
+        - New Contributors - First-time contributors to the project
+        - Developers - Team members working on the codebase
+        - DevOps/SRE - People deploying and operating the system
+        - API Users - External developers using our APIs
+        - End Users - People using the TicketVision platform
+        - Project Managers - Non-technical stakeholders
+        - All Audiences - Documentation useful for everyone
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is fixing this documentation?
+      options:
+        - Low - Minor improvement, not blocking anyone
+        - Medium - Would help developers be more productive
+        - High - Blocking new contributors or causing confusion
+        - Critical - Incorrect docs causing production issues
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other context about this documentation issue?
+      placeholder: |
+        - Why is this documentation important?
+        - What prompted this request?
+        - Any related issues or PRs?
+        - Screenshots of current state?
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      description: Please confirm the following
+      options:
+        - label: I have searched existing issues to ensure this is not a duplicate
+          required: true
+        - label: I have provided specific details about the documentation issue
+          required: true
+        - label: I am willing to help improve this documentation
+          required: false

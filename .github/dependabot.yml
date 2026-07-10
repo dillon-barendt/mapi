@@ -1,0 +1,60 @@
+version: 2
+updates:
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Phoenix"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "python"
+    ignore:
+      - dependency-name: "fastapi"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "pydantic"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "faststream"
+        update-types: [ "version-update:semver-major" ]
+      - dependency-name: "opentelemetry-instrumentation-fastapi"
+        update-types: [ "version-update:semver-major", "version-update:semver-minor" ]
+      - dependency-name: "python-semantic-release"
+        update-types: [ "version-update:semver-major" ]
+    groups:
+      fastapi-ecosystem:
+        patterns:
+          - "fastapi*"
+          - "starlette*"
+          - "uvicorn*"
+      testing:
+        patterns:
+          - "pytest*"
+          - "coverage*"
+          - "factory-boy*"
+      linting:
+        patterns:
+          - "ruff*"
+          - "mypy*"
+          - "pyright*"
+          - "import-linter*"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "America/Phoenix"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"

@@ -1,0 +1,151 @@
+name: Security Issue
+description: Report a security vulnerability (use private reporting for critical issues)
+title: "[Security]: "
+labels: [ "type: security", "priority: high", "status: needs-triage" ]
+assignees: [ ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ **IMPORTANT SECURITY NOTICE**
+
+        For **critical security vulnerabilities**, please use GitHub's private vulnerability reporting feature instead of this public issue template.
+
+        Go to: **Security → Report a vulnerability** to report privately.
+
+        Use this template only for:
+        - Security improvements
+        - Security-related feature requests
+        - Non-critical security concerns
+        - Security documentation issues
+
+  - type: dropdown
+    id: security-type
+    attributes:
+      label: Security Issue Type
+      description: What type of security issue is this?
+      options:
+        - Security Enhancement - Improve security posture
+        - Security Configuration - Security-related configuration issue
+        - Security Documentation - Security documentation needs improvement
+        - Security Audit - Request for security review
+        - Dependency Security - Security update for dependencies
+        - Access Control - Permission or authentication issue
+        - Data Protection - Data handling or privacy concern
+        - Infrastructure Security - Deployment or infrastructure security
+        - Other Security Concern - General security improvement
+    validations:
+      required: true
+
+  - type: textarea
+    id: security-description
+    attributes:
+      label: Security Concern Description
+      description: Describe the security concern or improvement needed.
+      placeholder: |
+        What security aspect needs attention?
+        What are the potential risks?
+        What improvements do you suggest?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component
+      description: Which component is affected by this security concern?
+      options:
+        - API endpoints - Authentication, authorization, routing
+        - Application services - Business operation orchestration
+        - Domain models - Data models and validation
+        - Provider integration - External marketplace clients
+        - Infrastructure/runtime - Network, cache, browser, session state
+        - Core configuration - Settings, logging, lifecycle, middleware
+        - Workflows/automation - Agentic or long-running flows
+        - CI/CD and releases - Build and deployment security
+        - Documentation - Security documentation
+        - Multiple Components - Cross-cutting security concern
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity Level
+      description: How severe is this security concern?
+      options:
+        - Low - Security improvement, no immediate risk
+        - Medium - Potential security weakness, should be addressed
+        - High - Security concern that should be prioritized
+        - Critical - Serious security issue (consider private reporting)
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-state
+    attributes:
+      label: Current State
+      description: What is the current security posture or implementation?
+      placeholder: |
+        How is security currently handled in this area?
+        What are the existing security measures?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-improvement
+    attributes:
+      label: Proposed Security Improvement
+      description: What security improvements do you suggest?
+      placeholder: |
+        What security measures should be implemented?
+        How can the current approach be improved?
+        What security best practices should be followed?
+    validations:
+      required: true
+
+  - type: textarea
+    id: security-impact
+    attributes:
+      label: Security Impact
+      description: What are the security implications of not addressing this?
+      placeholder: |
+        What risks exist with the current approach?
+        What could an attacker potentially exploit?
+        What data or systems could be affected?
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Security References
+      description: Any relevant security standards, guidelines, or documentation?
+      placeholder: |
+        - OWASP guidelines
+        - Security best practices
+        - Compliance requirements
+        - Industry standards
+        - Related CVEs or security advisories
+
+  - type: checkboxes
+    id: security-checklist
+    attributes:
+      label: Security Checklist
+      description: Please confirm the following
+      options:
+        - label: This is NOT a critical vulnerability that could be exploited immediately
+          required: true
+        - label: I have considered whether this should be reported privately instead
+          required: true
+        - label: I have searched existing issues to ensure this is not a duplicate
+          required: true
+        - label: I am willing to help implement security improvements
+          required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+
+        **Remember**: For critical security vulnerabilities that could be actively exploited, please use GitHub's private vulnerability reporting feature instead of this public issue template.
+
+        **Security Contact**: For urgent security matters, you can also contact our security team directly.

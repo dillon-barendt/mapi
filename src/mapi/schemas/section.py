@@ -3,7 +3,7 @@ from typing import Annotated
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 from pydantic.types import NonNegativeInt, StrictStr
 
-from app.schemas.row import RowOut
+from mapi.schemas.row import RowOut
 
 
 class SectionInput(BaseModel):

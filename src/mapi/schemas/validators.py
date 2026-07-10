@@ -8,9 +8,9 @@ from collections.abc import Sequence
 from math import log2
 from typing import Literal, TypedDict
 
-from app.schemas.row import RowOut, RowProgression
-from app.schemas.section import SectionInput, SectionOut
-from app.schemas.venue import Venue, VenueOut
+from mapi.schemas.row import RowOut, RowProgression
+from mapi.schemas.section import SectionInput, SectionOut
+from mapi.schemas.venue import Venue, VenueOut
 
 ATOM_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]*$")
 LETTER_RE = re.compile(r"^([A-Z])\1*$")

@@ -3,7 +3,7 @@ from typing import Any, cast
 from fastapi.applications import FastAPI
 from fastapi.openapi.utils import get_openapi
 
-from app.core.constants import (
+from mapi.core.constants import (
     API_DESCRIPTION,
     API_TITLE,
     API_VERSION,

@@ -4,7 +4,7 @@ from typing import Any, cast
 
 import httpx
 
-from app.core.config import Settings, get_settings
+from mapi.core.config import Settings, get_settings
 
 from .exceptions import TicketmasterDiscoveryProviderError
 

@@ -4,7 +4,7 @@ from typing import Any, cast
 
 import httpx
 
-from app.core.config import Settings, get_settings
+from mapi.core.config import Settings, get_settings
 
 from .exceptions import TicketmasterMapsProviderError
 from .schemas import TicketmasterPlaceDetailRaw
@@ -60,7 +60,7 @@ class TicketmasterMapsClient:
             or DEFAULT_USER_AGENT,
             "sec-ch-ua-platform": '"macOS"',
             "sec-ch-ua": (
-                '"Not;A=Brand";v="8", "Chromium";v="150", ' '"Google Chrome";v="150"'
+                '"Not;A=Brand";v="8", "Chromium";v="150", "Google Chrome";v="150"'
             ),
             "sec-ch-ua-mobile": "?0",
         }

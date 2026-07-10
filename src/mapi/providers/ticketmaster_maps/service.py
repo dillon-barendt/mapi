@@ -1,12 +1,10 @@
 from __future__ import annotations
 
-import re
 from typing import Any, Protocol
 
+from ...core.constants import TM_LEGACY_EVENT_REGEX
 from .exceptions import TicketmasterMapsProviderError
 from .schemas import TicketmasterPlaceDetailRaw, TicketmasterPlaceDetailSummary
-
-LEGACY_EVENT_ID_PATTERN = re.compile(r"^[A-Z0-9]{6,40}$")
 
 
 def normalize_legacy_event_id(value: str) -> str:
@@ -17,7 +15,7 @@ def normalize_legacy_event_id(value: str) -> str:
         raise TicketmasterMapsProviderError(
             "Legacy Event ID must not be a URL or path."
         )
-    if not LEGACY_EVENT_ID_PATTERN.fullmatch(normalized):
+    if not TM_LEGACY_EVENT_REGEX.fullmatch(normalized):
         raise TicketmasterMapsProviderError(
             "Legacy Event ID must be 6-40 alphanumeric characters."
         )

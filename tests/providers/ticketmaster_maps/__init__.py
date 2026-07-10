@@ -1,1 +1,0 @@
-"""Ticketmaster Maps provider tests."""

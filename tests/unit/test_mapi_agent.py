@@ -1,7 +1,7 @@
 import pytest
 
-from app.agents.mapi import build_agent_analysis, run_mapi_agent
-from app.schemas.agent import MapiAgentRequest
+from mapi.agents.mapi import build_agent_analysis, run_mapi_agent
+from mapi.schemas.agent import MapiAgentRequest
 
 
 def test_build_agent_analysis_explains_mapi_name_and_mapping_value() -> None:

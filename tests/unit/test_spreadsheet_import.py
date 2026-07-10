@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from app.services.spreadsheet_import import (
+from mapi.services.spreadsheet_import import (
     SpreadsheetRowRecord,
     compress_section_rows,
     load_csv_records,

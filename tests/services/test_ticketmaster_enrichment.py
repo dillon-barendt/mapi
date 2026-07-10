@@ -5,14 +5,14 @@ from pathlib import Path
 
 import pytest
 
-from app.providers.ticketmaster_discovery import parse_discovery_json_events
-from app.providers.ticketmaster_maps import (
+from mapi.providers.ticketmaster_discovery import parse_discovery_json_events
+from mapi.providers.ticketmaster_maps import (
     TicketmasterMapsProviderError,
     summarize_place_detail_payload,
 )
-from app.services.ticketmaster_enrichment import TicketmasterEnrichmentService
+from mapi.services.ticketmaster_enrichment import TicketmasterEnrichmentService
 
-DISCOVERY_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster_discovery"
+DISCOVERY_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster"
 MAPS_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster_maps"
 
 

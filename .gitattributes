@@ -1,0 +1,12 @@
+# Normalize line endings
+* text=auto
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.zip binary
+
+# Prevent notebook diffs from being insane
+*.ipynb filter=nbstripout

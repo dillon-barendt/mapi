@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from app.main import app
+from mapi.main import app
 
 
 def test_parse_endpoint_expands_rows() -> None:

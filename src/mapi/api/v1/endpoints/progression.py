@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, status
 
-from app.agents import run_mapi_agent
-from app.schemas import (
+from mapi.agents import run_mapi_agent
+from mapi.schemas import (
     BulkParseResp,
     BulkParsingRequest,
     CodeResp,
@@ -19,8 +19,8 @@ from app.schemas import (
     VenueOut,
     VenueRequest,
 )
-from app.schemas import validators as row_progression
-from app.services import SpreadsheetRowRecord, compress_section_rows
+from mapi.schemas import validators as row_progression
+from mapi.services import SpreadsheetRowRecord, compress_section_rows
 
 router = APIRouter()
 

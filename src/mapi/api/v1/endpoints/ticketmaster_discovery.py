@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import Annotated, Literal
+from typing import Annotated, Literal, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from app.api.deps import get_ticketmaster_discovery_service
-from app.providers.ticketmaster_discovery import (
+from mapi.api.deps import get_ticketmaster_discovery_service
+from mapi.providers.ticketmaster_discovery import (
     TicketmasterDiscoveryFeedSummary,
     TicketmasterDiscoveryProviderError,
     TicketmasterDiscoveryService,
@@ -96,6 +96,6 @@ async def get_metadata(
     ],
 ) -> dict[str, object]:
     try:
-        return await service.fetch_feed_metadata()
+        return cast("dict[str, object]", await service.fetch_feed_metadata())
     except TicketmasterDiscoveryProviderError as error:
         raise _provider_error(error) from error

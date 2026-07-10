@@ -1,16 +1,16 @@
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 
-from app.api.deps import get_ticketmaster_enrichment_service
-from app.providers.ticketmaster_discovery import TicketmasterDiscoveryProviderError
-from app.providers.ticketmaster_maps import (
+from mapi.api.deps import get_ticketmaster_enrichment_service
+from mapi.providers.ticketmaster_discovery import TicketmasterDiscoveryProviderError
+from mapi.providers.ticketmaster_maps import (
     TicketmasterMapsProviderError,
     TicketmasterPlaceDetailSummary,
 )
-from app.services.ticketmaster_enrichment import (
+from mapi.services.ticketmaster_enrichment import (
     MAX_ENRICHMENT_SAMPLE_LIMIT,
     TicketmasterEnrichedEventMapSummary,
     TicketmasterEnrichmentService,
@@ -58,6 +58,9 @@ async def get_sample_map_summaries(
     limit: Annotated[int, Query(ge=1, le=MAX_ENRICHMENT_SAMPLE_LIMIT)] = 10,
 ) -> list[TicketmasterEnrichedEventMapSummary]:
     try:
-        return await service.enrich_discovery_feed_sample(country_code, limit)
+        return cast(
+            "list[TicketmasterEnrichedEventMapSummary]",
+            await service.enrich_discovery_feed_sample(country_code, limit),
+        )
     except (TicketmasterDiscoveryProviderError, ValueError) as error:
         raise _provider_error(error) from error

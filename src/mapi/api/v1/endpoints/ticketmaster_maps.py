@@ -4,8 +4,8 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from app.api.deps import get_ticketmaster_maps_service
-from app.providers.ticketmaster_maps import (
+from mapi.api.deps import get_ticketmaster_maps_service
+from mapi.providers.ticketmaster_maps import (
     TicketmasterMapsProviderError,
     TicketmasterMapsService,
     TicketmasterPlaceDetailSummary,

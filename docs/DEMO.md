@@ -3,26 +3,22 @@
 ## Install
 
 ```bash
-python3.13 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
+uv sync --all-groups
 ```
 
 ## Run Tests
 
 ```bash
-black --check .
-isort --check-only .
-ruff check .
-mypy app
-pytest --cov=app --cov-report=term-missing
+uv run ruff format . --check
+uv run ruff check --fix --unsafe-fixes
+uv run mypy src/mapi
+uv run pytest --cov=mapi --cov-report=term-missing
 ```
 
 ## Run API
 
 ```bash
-uvicorn app.main:app --reload
+uv run fastapi dev src/mapi/main.py
 ```
 
 Open:
@@ -34,7 +30,7 @@ http://127.0.0.1:8000/docs
 ## Run CLI Import
 
 ```bash
-python -m app.cli import-csv examples/csv/demo_venue_rows.csv
+python -m mapi.cli import-csv examples/csv/demo_venue_rows.csv
 ```
 
 ## Call `/parse`

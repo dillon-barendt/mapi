@@ -24,14 +24,14 @@ flowchart LR
 
 ## Runtime Modules
 
-| Module | Responsibility |
-| --- | --- |
-| `app/schemas/validators.py` | Parse, compress, inspect, build, and diff row progression codes. |
-| `app/agents/mapi.py` | Pydantic AI agent that explains mapping value, Redis keys, and review triggers. |
-| `app/schemas/*.py` | Pydantic request and response models for API contracts. |
-| `app/api/v1/endpoints/progression.py` | Versioned FastAPI endpoints under `/api/v1/row-progression`. |
-| `app/main.py` | FastAPI app construction, middleware, and health/cache endpoints. |
-| `docs/*.md` | Domain, architecture, Redis, and example documentation. |
+| Module                                     | Responsibility                                                                  |
+|--------------------------------------------|---------------------------------------------------------------------------------|
+| `src/mapi/schemas/validators.py`           | Parse, compress, inspect, build, and diff row progression codes.                |
+| `src/mapi/agents/mapi.py`                  | Pydantic AI agent that explains mapping value, Redis keys, and review triggers. |
+| `src/mapi/schemas/*.py`                    | Pydantic request and response models for API contracts.                         |
+| `src/mapi/api/v1/endpoints/progression.py` | Versioned FastAPI endpoints under `/api/v1/row-progression`.                    |
+| `src/mapi/main.py`                         | FastAPI app construction, middleware, and health/cache endpoints.               |
+| `docs/*.md`                                | Domain, architecture, Redis, and example documentation.                         |
 
 ## Endpoint Surface
 

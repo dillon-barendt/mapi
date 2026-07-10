@@ -3,7 +3,7 @@
 Run the API locally:
 
 ```bash
-uvicorn app.main:app --reload
+uv run fastapi dev src/mapi/main.py
 ```
 
 The OpenAPI UI is available at:

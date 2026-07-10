@@ -78,8 +78,8 @@ See [docs/DOMAIN.md](docs/DOMAIN.md) for the parser rules.
 Run locally:
 
 ```bash
-python -m pip install -e ".[dev]"
-uvicorn app.main:app --reload
+uv sync --all-groups
+uv run fastapi dev src/mapi/main.py
 ```
 
 Parse one section:
@@ -119,7 +119,7 @@ available at `/docs` when the app is running.
 Run the local import command:
 
 ```bash
-python -m app.cli import-csv examples/csv/demo_venue_rows.csv
+python -m mapi.cli import-csv examples/csv/demo_venue_rows.csv
 ```
 
 Expected output:
@@ -221,13 +221,13 @@ flowchart LR
 
 Key files:
 
-- `app/services/spreadsheet_import.py`: CSV/API import normalization.
-- `app/schemas/validators.py`: parser, compressor, stats, venue build, venue
+- `src/mapi/services/spreadsheet_import.py`: CSV/API import normalization.
+- `src/mapi/schemas/validators.py`: parser, compressor, stats, venue build, venue
   diff.
-- `app/agents/mapi.py`: Pydantic AI agent wrapper for mapping analysis.
-- `app/api/v1/endpoints/progression.py`: versioned FastAPI endpoints.
+- `src/mapi/agents/mapi.py`: Pydantic AI agent wrapper for mapping analysis.
+- `src/mapi/api/v1/endpoints/progression.py`: versioned FastAPI endpoints.
 - `docs/ARCHITECTURE.md`: architecture notes and parser flow.
-- `app/schemas/*.py`: Pydantic request and response models.
+- `src/mapi/schemas/*.py`: Pydantic request and response models.
 
 ## Testing Strategy
 
@@ -247,11 +247,10 @@ The suite covers:
 Run:
 
 ```bash
-black --check .
-isort --check-only .
-ruff check .
-mypy app
-pytest --cov=app --cov-report=term-missing
+uv run ruff format . --check
+uv run ruff check --fix --unsafe-fixes
+uv run mypy src/mapi
+uv run pytest --cov=mapi --cov-report=term-missing
 ```
 
 ## Local Development
@@ -260,13 +259,10 @@ Python 3.13 is retained because the current FastAPI, Pydantic, and Pydantic AI
 dependency set supports it.
 
 ```bash
-python3.13 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
+uv sync --all-groups
 make quality
 make demo-cli
-uvicorn app.main:app --reload
+uv run fastapi dev src/mapi/main.py
 ```
 
 Docker is also available for API and Redis Stack demos:

@@ -15,7 +15,7 @@ curl 'https://mapsapi.tmol.io/maps/geometry/3/event/3B00633EA89923F8/placeDetail
 ```
 
 Browser-like provider headers are isolated inside
-`app/providers/ticketmaster_maps/client.py`. Domain services and API routes do
+`src/mapi/providers/ticketmaster_maps/client.py`. Domain services and API routes do
 not know about those headers.
 
 Mapi keeps raw and normalized provider data separate:

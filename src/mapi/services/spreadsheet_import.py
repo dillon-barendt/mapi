@@ -6,8 +6,8 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
-from app.schemas.row import RowOut
-from app.schemas.validators import compress_rows
+from mapi.schemas.row import RowOut
+from mapi.schemas.validators import compress_rows
 
 
 @dataclass(frozen=True, slots=True)

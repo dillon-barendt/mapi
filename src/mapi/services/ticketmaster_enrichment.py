@@ -4,11 +4,11 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from app.providers.ticketmaster_discovery import (
+from mapi.providers.ticketmaster_discovery import (
     TicketmasterDiscoveryEvent,
     TicketmasterDiscoveryService,
 )
-from app.providers.ticketmaster_maps import (
+from mapi.providers.ticketmaster_maps import (
     TicketmasterMapsProviderError,
     TicketmasterMapsService,
     TicketmasterPlaceDetailSummary,

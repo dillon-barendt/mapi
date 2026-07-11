@@ -57,7 +57,7 @@ testpaths = ["tests"]
 
 [dependency-groups]
 dev = [
-  "black>=25.1.0,<26.0.0",
+  "black>=26.5.1,<27.0.0",
   "commitlint>=1.13.3",
   "httpx>=0.28.1,<0.29.0",
   "hypothesis>=6.156.4",

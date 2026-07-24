@@ -11,9 +11,11 @@ from mapi.providers.ticketmaster_discovery import (
     parse_discovery_csv_events,
     parse_discovery_json_events,
 )
-from mapi.providers.ticketmaster_maps import TicketmasterMapsProviderError, \
-    normalize_legacy_event_id, summarize_place_detail_payload
-from providers.ticketmaster_maps.test_service import FIXTURES
+from mapi.providers.ticketmaster_maps import (
+    TicketmasterMapsProviderError,
+    normalize_legacy_event_id,
+    summarize_place_detail_payload,
+)
 
 FIXTURES = Path(__file__).parents[2] / "fixtures" / "ticketmaster"
 

@@ -4,7 +4,10 @@ import httpx
 import pytest
 
 from mapi.core.config import Settings
-from mapi.providers.ticketmaster_maps import TicketmasterMapsClient, TicketmasterMapsProviderError
+from mapi.providers.ticketmaster_maps import (
+    TicketmasterMapsClient,
+    TicketmasterMapsProviderError,
+)
 
 
 @pytest.mark.anyio

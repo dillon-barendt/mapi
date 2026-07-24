@@ -14,5 +14,3 @@ htmlcov/
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
-!/src/mapi.egg-info/
-!/src/mapi.egg-info/

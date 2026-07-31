@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # Ensure the exact workflow commit is checked out so later git operations
           # (or semantic-release) have the full commit object available.

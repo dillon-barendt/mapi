@@ -220,11 +220,11 @@ wheels = [
 
 [[package]]
 name = "commitlint"
-version = "1.13.3"
+version = "2.0.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/7a/00/e2dcd72cd76969b74e811ed06506183b00f9dd0e0f308a4f3672300a32a2/commitlint-1.13.3.tar.gz", hash = "sha256:e92522e064010ae85b825b73923760c0e4ff34954859fec4976f3e86a342ea30", size = 23968, upload-time = "2026-01-11T13:09:47.622Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/dd/68/3ed72489311b4b0c985dba1c0fa8ef98c1a6a4d9d14fbac28de15c7e2e6f/commitlint-2.0.0.tar.gz", hash = "sha256:83ec24f17d87184b4697a8b1d9fe24952888bd40387f8f8c53486584eac960e7", size = 24588, upload-time = "2026-07-29T02:43:26.946Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e0/8a/a524c54aa6a8c712ddea2da6ffbbdde93c2c4eeb8121cae2a43e266c1cea/commitlint-1.13.3-py3-none-any.whl", hash = "sha256:330a9aa892b0bca9d671c5cd059755d9d48468f35095efe1be09ba667085b3f7", size = 26742, upload-time = "2026-01-11T13:09:45.572Z" },
+    { url = "https://files.pythonhosted.org/packages/96/7e/224f9ba092d1374869c512f49b4e30905424867d70a7f4dede7f44cf8f5b/commitlint-2.0.0-py3-none-any.whl", hash = "sha256:f3aa539348393bc5e1f346e41bb9a6eb42b20763df8d0d528eaf1b29284c2510", size = 27730, upload-time = "2026-07-29T02:43:25.808Z" },
 ]
 
 [[package]]
@@ -785,7 +785,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "black", specifier = ">=26.5.1,<27.0.0" },
-    { name = "commitlint", specifier = ">=1.13.3" },
+    { name = "commitlint", specifier = ">=2.0.0" },
     { name = "httpx", specifier = ">=0.28.1,<0.29.0" },
     { name = "hypothesis", specifier = ">=6.156.4" },
     { name = "isort", specifier = ">=8.0.1,<9.0.0" },

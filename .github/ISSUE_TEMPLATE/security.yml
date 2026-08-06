@@ -1,8 +1,8 @@
 name: Security Issue
 description: Report a security vulnerability (use private reporting for critical issues)
 title: "[Security]: "
-labels: [ "type: security", "priority: high", "status: needs-triage" ]
-assignees: [ ]
+labels: ["type: security", "priority: high", "status: needs-triage"]
+assignees: []
 body:
   - type: markdown
     attributes:

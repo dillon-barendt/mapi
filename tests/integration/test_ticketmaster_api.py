@@ -12,25 +12,33 @@ from mapi.api.deps import (
 )
 from mapi.main import app
 from mapi.providers.ticketmaster_discovery import (
+    TicketmasterDiscoveryFeedSummary,
     TicketmasterDiscoveryProviderError,
+    TicketmasterDiscoveryService,
     parse_discovery_json_events,
 )
 from mapi.providers.ticketmaster_maps import (
     TicketmasterMapsProviderError,
+    TicketmasterMapsService,
+    TicketmasterPlaceDetailSummary,
     summarize_place_detail_payload,
 )
 from mapi.services.ticketmaster_enrichment import TicketmasterEnrichmentService
 
-DISCOVERY_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster"
+DISCOVERY_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster_discovery"
 MAPS_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster_maps"
 
 
-class FakeDiscoveryService:
-    async def fetch_events_json(self, country_code: str = "US"):
+class FakeDiscoveryService(TicketmasterDiscoveryService):
+    async def fetch_events_json(
+        self, country_code: str = "US"
+    ) -> TicketmasterDiscoveryFeedSummary:
         events = json.loads((DISCOVERY_FIXTURES / "events_minimal.json").read_text())
         return parse_discovery_json_events(country_code, events)
 
-    async def fetch_events_csv(self, country_code: str = "US"):
+    async def fetch_events_csv(
+        self, country_code: str = "US"
+    ) -> TicketmasterDiscoveryFeedSummary:
         return await self.fetch_events_json(country_code)
 
     async def fetch_feed_metadata(self) -> dict[str, object]:
@@ -38,18 +46,24 @@ class FakeDiscoveryService:
 
 
 class FailingDiscoveryService(FakeDiscoveryService):
-    async def fetch_events_json(self, country_code: str = "US"):
+    async def fetch_events_json(
+        self, country_code: str = "US"
+    ) -> TicketmasterDiscoveryFeedSummary:
         raise TicketmasterDiscoveryProviderError("provider unavailable")
 
 
-class FakeMapsService:
-    async def fetch_place_detail_summary(self, legacy_event_id: str):
+class FakeMapsService(TicketmasterMapsService):
+    async def fetch_place_detail_summary(
+        self, legacy_event_id: str
+    ) -> TicketmasterPlaceDetailSummary:
         payload = json.loads((MAPS_FIXTURES / "place_detail_minimal.json").read_text())
         return summarize_place_detail_payload(legacy_event_id, payload)
 
 
-class FailingMapsService:
-    async def fetch_place_detail_summary(self, legacy_event_id: str):
+class FailingMapsService(TicketmasterMapsService):
+    async def fetch_place_detail_summary(
+        self, legacy_event_id: str
+    ) -> TicketmasterPlaceDetailSummary:
         raise TicketmasterMapsProviderError("map unavailable")
 
 
@@ -58,7 +72,9 @@ def _clear_overrides() -> None:
 
 
 def test_ticketmaster_discovery_events_route_returns_summary() -> None:
-    app.dependency_overrides[get_ticketmaster_discovery_service] = FakeDiscoveryService
+    app.dependency_overrides[get_ticketmaster_discovery_service] = lambda: (
+        FakeDiscoveryService()
+    )
     try:
         with TestClient(app) as client:
             response = client.get(
@@ -76,7 +92,9 @@ def test_ticketmaster_discovery_events_route_returns_summary() -> None:
 
 
 def test_ticketmaster_discovery_legacy_ids_route_returns_ids() -> None:
-    app.dependency_overrides[get_ticketmaster_discovery_service] = FakeDiscoveryService
+    app.dependency_overrides[get_ticketmaster_discovery_service] = lambda: (
+        FakeDiscoveryService()
+    )
     try:
         with TestClient(app) as client:
             response = client.get("/api/v1/ticketmaster-discovery/events/legacy-ids")
@@ -91,7 +109,9 @@ def test_ticketmaster_discovery_legacy_ids_route_returns_ids() -> None:
 
 
 def test_ticketmaster_discovery_metadata_route_returns_payload() -> None:
-    app.dependency_overrides[get_ticketmaster_discovery_service] = FakeDiscoveryService
+    app.dependency_overrides[get_ticketmaster_discovery_service] = lambda: (
+        FakeDiscoveryService()
+    )
     try:
         with TestClient(app) as client:
             response = client.get("/api/v1/ticketmaster-discovery/metadata")
@@ -103,7 +123,7 @@ def test_ticketmaster_discovery_metadata_route_returns_payload() -> None:
 
 
 def test_ticketmaster_maps_place_detail_route_returns_summary() -> None:
-    app.dependency_overrides[get_ticketmaster_maps_service] = FakeMapsService
+    app.dependency_overrides[get_ticketmaster_maps_service] = lambda: FakeMapsService()
     try:
         with TestClient(app) as client:
             response = client.get(
@@ -119,8 +139,8 @@ def test_ticketmaster_maps_place_detail_route_returns_summary() -> None:
 def test_ticketmaster_enrichment_specific_event_route_returns_summary() -> None:
     app.dependency_overrides[get_ticketmaster_enrichment_service] = lambda: (
         TicketmasterEnrichmentService(
-            discovery_service=FakeDiscoveryService(),  # type: ignore[arg-type]
-            maps_service=FakeMapsService(),  # type: ignore[arg-type]
+            discovery_service=FakeDiscoveryService(),
+            maps_service=FakeMapsService(),
         )
     )
     try:
@@ -138,8 +158,8 @@ def test_ticketmaster_enrichment_specific_event_route_returns_summary() -> None:
 def test_ticketmaster_enrichment_sample_route_returns_combined_summary() -> None:
     app.dependency_overrides[get_ticketmaster_enrichment_service] = lambda: (
         TicketmasterEnrichmentService(
-            discovery_service=FakeDiscoveryService(),  # type: ignore[arg-type]
-            maps_service=FakeMapsService(),  # type: ignore[arg-type]
+            discovery_service=FakeDiscoveryService(),
+            maps_service=FakeMapsService(),
         )
     )
     try:
@@ -159,8 +179,8 @@ def test_ticketmaster_enrichment_sample_route_returns_combined_summary() -> None
 
 
 def test_provider_errors_become_http_errors() -> None:
-    app.dependency_overrides[get_ticketmaster_discovery_service] = (
-        FailingDiscoveryService
+    app.dependency_overrides[get_ticketmaster_discovery_service] = lambda: (
+        FailingDiscoveryService()
     )
     try:
         with TestClient(app) as client:

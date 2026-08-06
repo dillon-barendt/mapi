@@ -2,14 +2,14 @@ name: Documentation
 
 on:
   push:
-    branches: [ development ]
+    branches: [development]
     paths:
       - "docs/**"
       - "cspell.json"
       - "mkdocs.yml"
       - ".github/workflows/docs.yml"
   pull_request:
-    branches: [ development ]
+    branches: [development]
     paths:
       - "docs/**"
       - "cspell.json"
@@ -74,7 +74,7 @@ jobs:
     name: Deploy Documentation
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/development' && github.event_name == 'push' && vars.DEPLOY_GITHUB_PAGES == 'true'
-    needs: [ build-docs, validate-links ]
+    needs: [build-docs, validate-links]
     permissions:
       contents: read
       pages: write

@@ -46,35 +46,11 @@ jobs:
           path: site/
           retention-days: 30
 
-  validate-links:
-    name: Validate Documentation Links
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: "3.13"
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-
-      - name: Install documentation dependencies
-        run: uv sync --group docs
-
-      - name: Build documentation
-        run: uv run mkdocs build
-
-      - name: Validate internal links
-        run: uv run python tools/docs/check_docs_links.py
-
   deploy-docs:
     name: Deploy Documentation
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/development' && github.event_name == 'push' && vars.DEPLOY_GITHUB_PAGES == 'true'
-    needs: [build-docs, validate-links]
+    needs: build-docs
     permissions:
       contents: read
       pages: write

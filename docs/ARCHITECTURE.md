@@ -25,7 +25,7 @@ flowchart LR
 ## Runtime Modules
 
 | Module                                     | Responsibility                                                                  |
-|--------------------------------------------|---------------------------------------------------------------------------------|
+| ------------------------------------------ | ------------------------------------------------------------------------------- |
 | `src/mapi/schemas/validators.py`           | Parse, compress, inspect, build, and diff row progression codes.                |
 | `src/mapi/agents/mapi.py`                  | Pydantic AI agent that explains mapping value, Redis keys, and review triggers. |
 | `src/mapi/schemas/*.py`                    | Pydantic request and response models for API contracts.                         |
@@ -37,15 +37,15 @@ flowchart LR
 
 All domain endpoints are versioned under `/api/v1/row-progression`.
 
-| Method | Path | Purpose |
-| --- | --- | --- |
-| `POST` | `/parse` | Expand one compact code into typed rows. |
-| `POST` | `/bulk-parse` | Parse several compact codes independently. |
-| `POST` | `/compress` | Canonicalize expanded rows back into a compact code. |
-| `POST` | `/stats` | Return row counts, unique positions, entropy, and segment count. |
-| `POST` | `/build-venue` | Expand a venue made of compact section definitions. |
-| `POST` | `/venue-diff` | Compare compact venue maps by section and row position. |
-| `POST` | `/agent/analyze` | Run the Mapi Pydantic AI agent on one compact section code. |
+| Method | Path             | Purpose                                                          |
+| ------ | ---------------- | ---------------------------------------------------------------- |
+| `POST` | `/parse`         | Expand one compact code into typed rows.                         |
+| `POST` | `/bulk-parse`    | Parse several compact codes independently.                       |
+| `POST` | `/compress`      | Canonicalize expanded rows back into a compact code.             |
+| `POST` | `/stats`         | Return row counts, unique positions, entropy, and segment count. |
+| `POST` | `/build-venue`   | Expand a venue made of compact section definitions.              |
+| `POST` | `/venue-diff`    | Compare compact venue maps by section and row position.          |
+| `POST` | `/agent/analyze` | Run the Mapi Pydantic AI agent on one compact section code.      |
 
 ## Parser Flow
 

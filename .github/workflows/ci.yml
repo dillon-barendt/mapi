@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ development, main ]
+    branches: [development, main]
   pull_request:
-    branches: [ development, main ]
+    branches: [development, main]
 
 jobs:
   quality:
@@ -32,7 +32,7 @@ jobs:
         run: uv run ruff check --fix --unsafe-fixes
 
       - name: Type check
-        run: uv run mypy src tools
+        run: uv run mypy src/mapi
 
       - name: Test with coverage
         run: uv run pytest

@@ -17,11 +17,12 @@ from mapi.providers.ticketmaster_maps import (
     summarize_place_detail_payload,
 )
 
-FIXTURES = Path(__file__).parents[2] / "fixtures" / "ticketmaster"
+DISCOVERY_FIXTURES = Path(__file__).parents[2] / "fixtures" / "ticketmaster_discovery"
+MAPS_FIXTURES = Path(__file__).parents[2] / "fixtures" / "ticketmaster_maps"
 
 
 def test_parse_discovery_json_events_maps_fields_and_preserves_raw() -> None:
-    events = json.loads((FIXTURES / "events_minimal.json").read_text())
+    events = json.loads((DISCOVERY_FIXTURES / "events_minimal.json").read_text())
     summary = parse_discovery_json_events("us", events)
 
     assert summary.country_code == "US"
@@ -36,7 +37,7 @@ def test_parse_discovery_json_events_maps_fields_and_preserves_raw() -> None:
 
 
 def test_parse_discovery_csv_events_maps_fields() -> None:
-    csv_text = (FIXTURES / "events_minimal.csv").read_text()
+    csv_text = (DISCOVERY_FIXTURES / "events_minimal.csv").read_text()
     summary = parse_discovery_csv_events("US", csv_text)
 
     assert summary.event_count == 2
@@ -50,7 +51,7 @@ def test_parse_discovery_csv_events_maps_fields() -> None:
 def test_extract_legacy_event_ids_deduplicates_in_order() -> None:
     events = parse_discovery_csv_events(
         "US",
-        (FIXTURES / "events_minimal.csv").read_text(),
+        (DISCOVERY_FIXTURES / "events_minimal.csv").read_text(),
     ).events
 
     assert extract_legacy_event_ids([events[0], events[1], events[0]]) == [
@@ -75,7 +76,7 @@ def test_normalize_legacy_event_id_rejects_unsafe_values(value: str) -> None:
 
 
 def test_summarize_place_detail_payload_is_conservative() -> None:
-    payload = json.loads((FIXTURES / "place_detail_minimal.json").read_text())
+    payload = json.loads((MAPS_FIXTURES / "place_detail_minimal.json").read_text())
     summary = summarize_place_detail_payload("3b00633ea89923f8", payload)
 
     assert summary.legacy_event_id == "3B00633EA89923F8"

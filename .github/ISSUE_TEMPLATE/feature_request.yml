@@ -1,8 +1,8 @@
 name: Feature Request
 description: Suggest a new feature or enhancement for Mapi
 title: "[Feature]: "
-labels: [ "type: feature", "status: needs-triage" ]
-assignees: [ ]
+labels: ["type: feature", "status: needs-triage"]
+assignees: []
 body:
   - type: markdown
     attributes:

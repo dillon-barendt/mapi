@@ -17,15 +17,16 @@ updates:
       - "python"
     ignore:
       - dependency-name: "fastapi"
-        update-types: [ "version-update:semver-major" ]
+        update-types: ["version-update:semver-major"]
       - dependency-name: "pydantic"
-        update-types: [ "version-update:semver-major" ]
+        update-types: ["version-update:semver-major"]
       - dependency-name: "faststream"
-        update-types: [ "version-update:semver-major" ]
+        update-types: ["version-update:semver-major"]
       - dependency-name: "opentelemetry-instrumentation-fastapi"
-        update-types: [ "version-update:semver-major", "version-update:semver-minor" ]
+        update-types:
+          ["version-update:semver-major", "version-update:semver-minor"]
       - dependency-name: "python-semantic-release"
-        update-types: [ "version-update:semver-major" ]
+        update-types: ["version-update:semver-major"]
     groups:
       fastapi-ecosystem:
         patterns:

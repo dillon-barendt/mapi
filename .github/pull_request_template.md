@@ -20,5 +20,3 @@
 - [ ] Public docs use placeholders only.
 
 ## Risk / Rollout
-
-

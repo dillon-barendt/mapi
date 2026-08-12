@@ -28,12 +28,12 @@ Response excerpt:
 {
   "code": "AA:DD,A:C,1:12,13=13W",
   "rows": [
-    {"name": "AA", "position": 1},
-    {"name": "BB", "position": 2},
-    {"name": "CC", "position": 3},
-    {"name": "DD", "position": 4},
-    {"name": "13", "position": 20},
-    {"name": "13W", "position": 20}
+    { "name": "AA", "position": 1 },
+    { "name": "BB", "position": 2 },
+    { "name": "CC", "position": 3 },
+    { "name": "DD", "position": 4 },
+    { "name": "13", "position": 20 },
+    { "name": "13W", "position": 20 }
   ]
 }
 ```
@@ -48,8 +48,8 @@ Result:
 
 ```json
 [
-  {"name": "A", "position": 1},
-  {"name": "D", "position": 4}
+  { "name": "A", "position": 1 },
+  { "name": "D", "position": 4 }
 ]
 ```
 
@@ -76,7 +76,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/row-progression/compress \
 Response:
 
 ```json
-{"code": "1:2!,A,4!,B=BW"}
+{ "code": "1:2!,A,4!,B=BW" }
 ```
 
 The generated gap labels are canonical position placeholders. Parsing the
@@ -113,8 +113,8 @@ Response:
 {
   "venue_diff": {
     "101": {
-      "C": {"a": 3, "b": null},
-      "D": {"a": null, "b": 3}
+      "C": { "a": 3, "b": null },
+      "D": { "a": null, "b": 3 }
     }
   }
 }
@@ -164,10 +164,7 @@ Response excerpt:
   "analysis": {
     "friendly_name": "Mapi is a friendly name for a mapping API...",
     "parser_confidence": "valid",
-    "review_triggers": [
-      "Equivalent row alias detected; verify shared-position rows.",
-      "Range expansion used; validate start/end row family semantics."
-    ],
+    "review_triggers": ["Equivalent row alias detected; verify shared-position rows.", "Range expansion used; validate start/end row family semantics."],
     "redis": {
       "string_key": "venue:demo-arena:section:101:row_progression",
       "hash_key": "venue:demo-arena:section:101",

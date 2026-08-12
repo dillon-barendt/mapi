@@ -12,7 +12,7 @@ test:
 quality:
 	uv run ruff format . --check
 	uv run ruff check --fix --unsafe-fixes
-	uv run mypy src tools
+	uv run mypy src/mapi
 	uv run pytest --cov=mapi --cov-report=term-missing
 
 demo-cli:

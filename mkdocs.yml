@@ -1,0 +1,22 @@
+site_name: Mapi
+site_description: Compact venue row-progression mapping API
+repo_name: dillon-barendt/mapi
+repo_url: https://github.com/dillon-barendt/mapi
+
+theme:
+  name: material
+
+nav:
+  - Overview: README.md
+  - Domain model: DOMAIN.md
+  - Architecture: ARCHITECTURE.md
+  - Examples: EXAMPLES.md
+  - Demo: DEMO.md
+  - Broker workflow: BROKER_WORKFLOW.md
+  - Row progression model: row_progression_model.md
+  - Redis model: REDIS_MODEL.md
+  - Ticketmaster discovery feed: TICKETMASTER_DISCOVERY_FEED.md
+  - Ticketmaster enrichment pipeline: TICKETMASTER_ENRICHMENT_PIPELINE.md
+  - Ticketmaster maps: TICKETMASTER_MAPS.md
+  - Production extensions: PRODUCTION_EXTENSIONS.md
+  - Portfolio case study: PORTFOLIO_CASE_STUDY.md

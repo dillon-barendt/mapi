@@ -13,13 +13,13 @@ into a compact DSL value with deterministic parser behavior.
 
 ## Before and After
 
-| Step | Manual Spreadsheet Workflow | Mapi Workflow |
-| --- | --- | --- |
-| Input | Rows entered by hand | `section,row,position` records |
-| Validation | Visual inspection | Typed row validation |
-| Gaps | Manual notes | Canonical `!` gap slices |
-| Aliases | Manual convention | `=` shared-position rows |
-| Downstream use | Copy/paste | API response, Redis value, diff input |
+| Step           | Manual Spreadsheet Workflow | Mapi Workflow                         |
+| -------------- | --------------------------- | ------------------------------------- |
+| Input          | Rows entered by hand        | `section,row,position` records        |
+| Validation     | Visual inspection           | Typed row validation                  |
+| Gaps           | Manual notes                | Canonical `!` gap slices              |
+| Aliases        | Manual convention           | `=` shared-position rows              |
+| Downstream use | Copy/paste                  | API response, Redis value, diff input |
 
 ## Workflow Diagram
 

@@ -6,8 +6,13 @@ from pathlib import Path
 import pytest
 
 from mapi.providers.ticketmaster_discovery import parse_discovery_json_events
+from mapi.providers.ticketmaster_discovery.schemas import (
+    TicketmasterDiscoveryFeedSummary,
+)
 from mapi.providers.ticketmaster_maps import (
     TicketmasterMapsProviderError,
+    TicketmasterMapsService,
+    TicketmasterPlaceDetailSummary,
     summarize_place_detail_payload,
 )
 from mapi.services.ticketmaster_enrichment import TicketmasterEnrichmentService
@@ -17,27 +22,33 @@ MAPS_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster_maps"
 
 
 class FakeDiscoveryService:
-    async def fetch_events_json(self, country_code: str = "US"):
+    async def fetch_events_json(
+        self, country_code: str = "US"
+    ) -> TicketmasterDiscoveryFeedSummary:
         events = json.loads((DISCOVERY_FIXTURES / "events_minimal.json").read_text())
         return parse_discovery_json_events(country_code, events)
 
 
-class FakeMapsService:
-    async def fetch_place_detail_summary(self, legacy_event_id: str):
+class FakeMapsService(TicketmasterMapsService):
+    async def fetch_place_detail_summary(
+        self, legacy_event_id: str
+    ) -> TicketmasterPlaceDetailSummary:
         payload = json.loads((MAPS_FIXTURES / "place_detail_minimal.json").read_text())
         return summarize_place_detail_payload(legacy_event_id, payload)
 
 
-class FailingMapsService:
-    async def fetch_place_detail_summary(self, legacy_event_id: str):
+class FailingMapsService(TicketmasterMapsService):
+    async def fetch_place_detail_summary(
+        self, legacy_event_id: str
+    ) -> TicketmasterPlaceDetailSummary:
         raise TicketmasterMapsProviderError(f"no map for {legacy_event_id}")
 
 
 @pytest.mark.anyio
 async def test_enrich_event_by_legacy_id_returns_map_summary() -> None:
     service = TicketmasterEnrichmentService(
-        discovery_service=FakeDiscoveryService(),  # type: ignore[arg-type]
-        maps_service=FakeMapsService(),  # type: ignore[arg-type]
+        discovery_service=FakeDiscoveryService(),
+        maps_service=FakeMapsService(),
     )
 
     summary = await service.enrich_event_by_legacy_id("3b00633ea89923f8")
@@ -49,8 +60,8 @@ async def test_enrich_event_by_legacy_id_returns_map_summary() -> None:
 @pytest.mark.anyio
 async def test_enrich_discovery_feed_sample_respects_limit() -> None:
     service = TicketmasterEnrichmentService(
-        discovery_service=FakeDiscoveryService(),  # type: ignore[arg-type]
-        maps_service=FakeMapsService(),  # type: ignore[arg-type]
+        discovery_service=FakeDiscoveryService(),
+        maps_service=FakeMapsService(),
     )
 
     summaries = await service.enrich_discovery_feed_sample("US", limit=1)
@@ -63,8 +74,8 @@ async def test_enrich_discovery_feed_sample_respects_limit() -> None:
 @pytest.mark.anyio
 async def test_enrich_discovery_feed_sample_records_per_event_errors() -> None:
     service = TicketmasterEnrichmentService(
-        discovery_service=FakeDiscoveryService(),  # type: ignore[arg-type]
-        maps_service=FailingMapsService(),  # type: ignore[arg-type]
+        discovery_service=FakeDiscoveryService(),
+        maps_service=FailingMapsService(),
     )
 
     summaries = await service.enrich_discovery_feed_sample("US", limit=2)
@@ -79,8 +90,8 @@ async def test_enrich_discovery_feed_sample_records_per_event_errors() -> None:
 @pytest.mark.anyio
 async def test_enrich_discovery_feed_sample_rejects_unbounded_limits() -> None:
     service = TicketmasterEnrichmentService(
-        discovery_service=FakeDiscoveryService(),  # type: ignore[arg-type]
-        maps_service=FakeMapsService(),  # type: ignore[arg-type]
+        discovery_service=FakeDiscoveryService(),
+        maps_service=FakeMapsService(),
     )
 
     with pytest.raises(ValueError):

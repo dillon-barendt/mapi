@@ -49,12 +49,12 @@ notes in one place. Mapi separates those concerns:
 
 ## Before and After
 
-| Layer | Manual workflow | Mapi workflow |
-| --- | --- | --- |
-| Manual spreadsheet rows | `101,AA,1`, `101,BB,2`, `101,13W,20` | Same shape accepted through CSV or API |
-| Compact Mapi DSL | Hidden in spreadsheet conventions | `AA:DD,A:C,8:19!,13=13W` |
-| Typed rows/API output | Recreated by each downstream tool | `RowOut(name="13W", position=20)` |
-| Review workflow | Manual inspection | Parser stats, diffs, Redis fields, agent triggers |
+| Layer                   | Manual workflow                      | Mapi workflow                                     |
+| ----------------------- | ------------------------------------ | ------------------------------------------------- |
+| Manual spreadsheet rows | `101,AA,1`, `101,BB,2`, `101,13W,20` | Same shape accepted through CSV or API            |
+| Compact Mapi DSL        | Hidden in spreadsheet conventions    | `AA:DD,A:C,8:19!,13=13W`                          |
+| Typed rows/API output   | Recreated by each downstream tool    | `RowOut(name="13W", position=20)`                 |
+| Review workflow         | Manual inspection                    | Parser stats, diffs, Redis fields, agent triggers |
 
 This is not a fake CRUD app. It is a small domain model for a specific
 ticketing operations problem.
@@ -108,7 +108,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/row-progression/compress \
 Response:
 
 ```json
-{"code": "1:2!,A,4!,B=BW"}
+{ "code": "1:2!,A,4!,B=BW" }
 ```
 
 All domain endpoints live under `/api/v1/row-progression`. OpenAPI docs are

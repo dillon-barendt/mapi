@@ -48,6 +48,40 @@ async def test_discovery_client_builds_json_csv_and_metadata_urls() -> None:
 
 
 @pytest.mark.anyio
+async def test_discovery_client_follows_feed_download_redirects() -> None:
+    seen: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        if request.url.host == "feed.test":
+            return httpx.Response(
+                303,
+                headers={"location": "https://downloads.test/events.json"},
+            )
+        return httpx.Response(
+            200,
+            json=[{"eventId": "x", "legacyEventId": "ABC123"}],
+        )
+
+    async with httpx.AsyncClient(
+        transport=httpx.MockTransport(handler),
+    ) as http_client:
+        client = TicketmasterDiscoveryClient(
+            settings=Settings(
+                ticketmaster_api_key="test-key",
+                ticketmaster_discovery_base_url="https://feed.test/v2",
+            ),
+            http_client=http_client,
+        )
+
+        assert await client.get_events_json("US") == [
+            {"eventId": "x", "legacyEventId": "ABC123"}
+        ]
+
+    assert [request.url.host for request in seen] == ["feed.test", "downloads.test"]
+
+
+@pytest.mark.anyio
 async def test_discovery_client_requires_api_key() -> None:
     client = TicketmasterDiscoveryClient(settings=Settings(ticketmaster_api_key=None))
 

@@ -94,6 +94,7 @@ class TicketmasterDiscoveryClient:
                     self._build_url(path),
                     params=self._params(params),
                     timeout=self.settings.ticketmaster_discovery_timeout_seconds,
+                    follow_redirects=True,
                 )
             else:
                 async with httpx.AsyncClient() as client:
@@ -101,6 +102,7 @@ class TicketmasterDiscoveryClient:
                         self._build_url(path),
                         params=self._params(params),
                         timeout=self.settings.ticketmaster_discovery_timeout_seconds,
+                        follow_redirects=True,
                     )
         except httpx.TimeoutException as error:
             raise TicketmasterDiscoveryProviderError(

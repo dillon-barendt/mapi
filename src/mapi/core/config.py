@@ -49,10 +49,13 @@ class Settings(BaseSettings):
         default_factory=lambda: CORS_ALLOW_METHODS.copy(),
         description="Allowed CORS HTTP methods.",
     )
-    row_progression_tag: str = "Row Progression"
+    venue_dsl_tag: str = "Venue DSL"
+    row_progression_tag: str = "Venue DSL"
     ticketmaster_discovery_tag: str = "Ticketmaster Discovery"
     ticketmaster_maps_tag: str = "Ticketmaster Maps"
     ticketmaster_enrichment_tag: str = "Ticketmaster Enrichment"
+    gametime_enrichment_tag: str = "Gametime Enrichment"
+    events_db_path: str = "data/events.db"
 
     ticketmaster_api_key: str | None = Field(
         default=None,
@@ -77,6 +80,24 @@ class Settings(BaseSettings):
     ticketmaster_maps_timeout_seconds: float = 15.0
     ticketmaster_maps_enabled: bool = True
 
+    gametime_base_url: str = "https://mobile.gametime.co"
+    gametime_timeout_seconds: float = 30.0
+    gametime_enabled: bool = True
+    gametime_events_per_page: int = Field(
+        default=10_000,
+        description=(
+            "Events fetched per /v1/events page. The published spec caps per_page "
+            "at 6000, but the API accepts up to 10000 items per request."
+        ),
+    )
+    gametime_max_event_pages: int = Field(
+        default=10,
+        description="Safety cap on event pagination during enrichment jobs.",
+    )
+    gametime_listings_default_quantity: int = 2
+    gametime_listings_all_in_pricing: bool = True
+    gametime_listings_jitter_cheapest: int = 0
+
     @property
     def build_fastapi_kwargs(self) -> dict[str, Any]:
         return {
@@ -87,6 +108,20 @@ class Settings(BaseSettings):
             "docs_url": DOCS_URL,
             "redoc_url": REDOC_URL,
             "openapi_url": OPENAPI_URL,
+            "openapi_tags": [
+                {
+                    "name": self.venue_dsl_tag,
+                    "description": (
+                        "Map venue selections to row attributes using the compact "
+                        "venue DSL."
+                    ),
+                },
+                {"name": self.ticketmaster_discovery_tag},
+                {"name": self.ticketmaster_maps_tag},
+                {"name": self.ticketmaster_enrichment_tag},
+                {"name": self.gametime_enrichment_tag},
+                {"name": "Events"},
+            ],
             "contact": {"name": "Mapi maintainers", "email": self.support_email},
         }
 

@@ -17,7 +17,8 @@ from mapi.providers.ticketmaster_maps import (
     summarize_place_detail_payload,
 )
 
-FIXTURES = Path(__file__).parents[2] / "fixtures" / "ticketmaster"
+FIXTURES = Path(__file__).parents[2] / "fixtures" / "ticketmaster_discovery"
+MAPS_FIXTURES = Path(__file__).parents[2] / "fixtures" / "ticketmaster_maps"
 
 
 def test_parse_discovery_json_events_maps_fields_and_preserves_raw() -> None:
@@ -75,7 +76,7 @@ def test_normalize_legacy_event_id_rejects_unsafe_values(value: str) -> None:
 
 
 def test_summarize_place_detail_payload_is_conservative() -> None:
-    payload = json.loads((FIXTURES / "place_detail_minimal.json").read_text())
+    payload = json.loads((MAPS_FIXTURES / "place_detail_minimal.json").read_text())
     summary = summarize_place_detail_payload("3b00633ea89923f8", payload)
 
     assert summary.legacy_event_id == "3B00633EA89923F8"

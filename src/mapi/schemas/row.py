@@ -54,7 +54,7 @@ class RowProgression(BaseModel):
     )
 
     model_config = ConfigDict(
-        title="RowProgression",
+        title="Venue DSL",
         strict=True,
         frozen=True,
         json_schema_extra={

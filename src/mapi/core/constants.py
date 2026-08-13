@@ -30,7 +30,9 @@ row models, validates edge cases, compresses expanded rows, diffs compact venue
 maps, and documents Redis indexing patterns for downstream review workflows.
 """
 
-ROW_PROGRESSION_TAG_DESCRIPTION = (
-    "Parse, compress, diff, and inspect compact section-row progression codes."
+VENUE_DSL_TAG_DESCRIPTION = (
+    "Map venue selections to row attributes using the compact venue DSL."
 )
+# Compatibility name for callers importing the old constant.
+ROW_PROGRESSION_TAG_DESCRIPTION = VENUE_DSL_TAG_DESCRIPTION
 TM_LEGACY_EVENT_REGEX = re.compile(r"^[A-Z0-9]{6,40}$")

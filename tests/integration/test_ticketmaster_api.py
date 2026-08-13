@@ -21,7 +21,7 @@ from mapi.providers.ticketmaster_maps import (
 )
 from mapi.services.ticketmaster_enrichment import TicketmasterEnrichmentService
 
-DISCOVERY_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster"
+DISCOVERY_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster_discovery"
 MAPS_FIXTURES = Path(__file__).parents[1] / "fixtures" / "ticketmaster_maps"
 
 

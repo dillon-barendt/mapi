@@ -1,51 +1,56 @@
 # Architecture
 
-Mapi is intentionally small: the interesting work is the domain parser, not a
-large service framework. FastAPI exposes the parser through versioned endpoints,
-Pydantic models define request and response contracts, and pure Python helpers
-keep parse/compress/diff behavior testable without an ASGI server.
+Mapi has two bounded domains: the venue DSL remains a deterministic mapping
+utility, while the production event pipeline normalizes marketplace data into
+Schema.org-compatible events and offers.
 
-Mapi also includes a Pydantic AI agent layer. The agent interprets a compact row
-progression as a mapping value: the same string can represent a venue map, a
-normalized infrastructure value, and an API payload.
+Source sitemaps, marketplace Page Object Models, and Scrapy spiders feed raw
+records into a bounded classifier. The classifier may use Pydantic AI, but
+validated Pydantic models and review state remain authoritative.
 
 ```mermaid
 flowchart LR
-    A["Input venue DSL<br/>AA:DD,A:C,1:12,13=13W"]
-    B["Parser<br/>validate segments and expand ranges"]
-    C["Typed row model<br/>RowOut(name, position)"]
-    D["API response<br/>/api/v1/row-progression/parse"]
-    E["Pydantic AI agent<br/>mapping analysis and review triggers"]
-    F["Redis/query layer<br/>string, hash, JSON, search index"]
-    G["Agent workflow<br/>diff review and inventory checks"]
+    A["Sitemap / POM / Scrapy source"]
+    H["Schema.org Event subtype + Offer"]
+    I["SQLite production event store"]
+    J["/api/v1/events"]
+    K["React Server Component + MUI DataGrid"]
+    B["Source adapter"]
+    C["Pydantic validation"]
 
-    A --> B --> C --> D --> E --> F --> G
+    A --> B --> C --> H --> I --> J --> K
 ```
 
 ## Runtime Modules
 
 | Module                                     | Responsibility                                                                  |
-|--------------------------------------------|---------------------------------------------------------------------------------|
+| ------------------------------------------ | ------------------------------------------------------------------------------- |
 | `src/mapi/schemas/validators.py`           | Parse, compress, inspect, build, and diff row progression codes.                |
 | `src/mapi/agents/mapi.py`                  | Pydantic AI agent that explains mapping value, Redis keys, and review triggers. |
 | `src/mapi/schemas/*.py`                    | Pydantic request and response models for API contracts.                         |
+| `src/mapi/events/models.py`                | Schema.org-compatible Event subtypes, classifications, and Offers.              |
+| `src/mapi/events/repository.py`            | Durable SQLite event/offer persistence and DataGrid pagination.                 |
+| `src/mapi/events/ingestion.py`             | Sitemap extraction and bounded source classification contracts.                 |
 | `src/mapi/api/v1/endpoints/progression.py` | Versioned FastAPI endpoints under `/api/v1/row-progression`.                    |
 | `src/mapi/main.py`                         | FastAPI app construction, middleware, and health/cache endpoints.               |
 | `docs/*.md`                                | Domain, architecture, Redis, and example documentation.                         |
 
 ## Endpoint Surface
 
-All domain endpoints are versioned under `/api/v1/row-progression`.
+Normalized production events are served from `/api/v1/events`; the venue DSL
+compatibility surface remains under `/api/v1/dsl`.
 
-| Method | Path | Purpose |
-| --- | --- | --- |
-| `POST` | `/parse` | Expand one compact code into typed rows. |
-| `POST` | `/bulk-parse` | Parse several compact codes independently. |
-| `POST` | `/compress` | Canonicalize expanded rows back into a compact code. |
-| `POST` | `/stats` | Return row counts, unique positions, entropy, and segment count. |
-| `POST` | `/build-venue` | Expand a venue made of compact section definitions. |
-| `POST` | `/venue-diff` | Compare compact venue maps by section and row position. |
-| `POST` | `/agent/analyze` | Run the Mapi Pydantic AI agent on one compact section code. |
+| Method | Path             | Purpose                                                          |
+| ------ | ---------------- | ---------------------------------------------------------------- |
+| `POST` | `/parse`         | Expand one compact code into typed rows.                         |
+| `POST` | `/bulk-parse`    | Parse several compact codes independently.                       |
+| `POST` | `/compress`      | Canonicalize expanded rows back into a compact code.             |
+| `POST` | `/stats`         | Return row counts, unique positions, entropy, and segment count. |
+| `POST` | `/build-venue`   | Expand a venue made of compact section definitions.              |
+| `POST` | `/venue-diff`    | Compare compact venue maps by section and row position.          |
+| `POST` | `/agent/analyze` | Run the Mapi Pydantic AI agent on one compact section code.      |
+
+| `GET` | `/api/v1/events` | Paginated normalized Schema.org events and offers for the DataGrid. |
 
 ## Parser Flow
 

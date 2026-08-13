@@ -1,4 +1,16 @@
-# Domain: Compact Venue Row Maps
+# Domain: Events, Offers, and Venue Maps
+
+The production domain is a normalized event catalog. Events use Schema.org
+structures: `Event`, `ComedyEvent`, `SportsEvent`, `TheatreEvent`, `MusicEvent`,
+and `Festival`. Ticket products are represented as `Offer` records linked to an
+event and retain marketplace identifiers for downstream product lookup.
+
+Source ingestion accepts sitemap URLs, marketplace Page Object Models, and
+Scrapy spider records. A bounded classifier can assign the Schema.org subtype;
+unknown or low-confidence records remain reviewable rather than being silently
+promoted to a specialized type. The normalized records are persisted in the
+production event store and served through `GET /api/v1/events` for a React Server
+Component and MUI DataGrid.
 
 Ticketing venue maps look simple until brokers, marketplaces, and inventory
 systems need to agree on the same section-row shape. A section might contain
@@ -21,24 +33,24 @@ DD:AA,A:C,1:4,5!,6:10:2,12=12W,ZZZ
 This expands to:
 
 | Row | Position |
-| --- | ---: |
-| DD | 1 |
-| CC | 2 |
-| BB | 3 |
-| AA | 4 |
-| A | 5 |
-| B | 6 |
-| C | 7 |
-| 1 | 8 |
-| 2 | 9 |
-| 3 | 10 |
-| 4 | 11 |
-| 6 | 13 |
-| 8 | 14 |
-| 10 | 15 |
-| 12 | 16 |
-| 12W | 16 |
-| ZZZ | 17 |
+| --- | -------: |
+| DD  |        1 |
+| CC  |        2 |
+| BB  |        3 |
+| AA  |        4 |
+| A   |        5 |
+| B   |        6 |
+| C   |        7 |
+| 1   |        8 |
+| 2   |        9 |
+| 3   |       10 |
+| 4   |       11 |
+| 6   |       13 |
+| 8   |       14 |
+| 10  |       15 |
+| 12  |       16 |
+| 12W |       16 |
+| ZZZ |       17 |
 
 Position 12 is consumed by `5!`, but no row named `5` is returned.
 
@@ -57,14 +69,14 @@ rangeable because `A1:B1` has no reliable venue-independent ordering.
 
 Ranges are inclusive and can ascend or descend.
 
-| Code | Rows |
-| --- | --- |
-| `1:4` | `1`, `2`, `3`, `4` |
-| `5:1` | `5`, `4`, `3`, `2`, `1` |
-| `1:6:2` | `1`, `3`, `5` |
-| `A:D` | `A`, `B`, `C`, `D` |
-| `D:A` | `D`, `C`, `B`, `A` |
-| `AA:DD` | `AA`, `BB`, `CC`, `DD` |
+| Code      | Rows                              |
+| --------- | --------------------------------- |
+| `1:4`     | `1`, `2`, `3`, `4`                |
+| `5:1`     | `5`, `4`, `3`, `2`, `1`           |
+| `1:6:2`   | `1`, `3`, `5`                     |
+| `A:D`     | `A`, `B`, `C`, `D`                |
+| `D:A`     | `D`, `C`, `B`, `A`                |
+| `AA:DD`   | `AA`, `BB`, `CC`, `DD`            |
 | `HHH:DDD` | `HHH`, `GGG`, `FFF`, `EEE`, `DDD` |
 
 Repeated-letter ranges stay inside one family. `AA:DD` does not mean Excel-style

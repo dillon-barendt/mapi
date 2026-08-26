@@ -98,7 +98,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Spell check with cspell
-        uses: streetsidesoftware/cspell-action@v8
+        uses: streetsidesoftware/cspell-action@v9
         with:
           files: |
             docs/**/*.md

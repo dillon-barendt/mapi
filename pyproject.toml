@@ -13,7 +13,7 @@ dependencies = [
   "fastapi[standard]>=0.141.1,<0.142.0",
   "pydantic-ai-slim>=2.27.0,<3.0.0",
   "pydantic-settings>=2.15.0,<3.0.0",
-  "uvicorn[standard]>=0.52.1,<0.53.0",
+  "uvicorn[standard]>=0.52.3,<0.53.0",
 ]
 
 [tool.uv]
